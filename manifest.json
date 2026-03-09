@@ -1,0 +1,25 @@
+{
+  "name": "GeoQuest — Grade 5 Geography",
+  "short_name": "GeoQuest",
+  "description": "Grade 5 Social Sciences Geography study app",
+  "start_url": "/geoquest/",
+  "scope": "/geoquest/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f0d0b",
+  "theme_color": "#0f0d0b",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

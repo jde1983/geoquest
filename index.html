@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f0d0b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="GeoQuest">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <title>GeoQuest</title>
+  <style>
+
+  /* ==============================================
+     RESET + BASE
+  ============================================== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* App base */
+    --bg:           #0f0d0b;
+    --bg2:          #1a1714;
+    --text:         #f0ede8;
+    --muted:        rgba(240,237,232,0.5);
+    --gold:         #c9a84c;
+    --gold-glow:    rgba(201,168,76,0.3);
+
+    /* World 1: Marauder's Atlas (Hogwarts) */
+    --w1-parchment: #f2e4c4;
+    --w1-parchment2:#e4d0a4;
+    --w1-ink:       #2c1a10;
+    --w1-gold:      #b8860b;
+    --w1-wax:       #8b1a1a;
+
+    /* World 2: Clan Territories (Warriors) */
+    --w2-bg:        #0a1409;
+    --w2-accent:    #4a7c59;
+    --w2-text:      #d0eadb;
+
+    /* World 3: Pale Frontier (Lightfall) */
+    --w3-bg:        #070c18;
+    --w3-accent:    #5a80b8;
+    --w3-text:      #c8d8f0;
+
+    /* World 4: Wakanda Underground */
+    --w4-bg:        #0a0806;
+    --w4-accent:    #c98a18;
+    --w4-text:      #f0ddb0;
+
+    --radius:  16px;
+    --font:    'Nunito', system-ui, sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  #app { height: 100%; }
+
+  /* ==============================================
+     SCREENS
+  ============================================== */
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
+  }
+  .screen.active { display: flex; }
+
+  /* ==============================================
+     GRAND QUEST BAR
+     Appears at the top of every screen
+  ============================================== */
+  .gq-bar {
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    background: rgba(15,13,11,0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .gq-label {
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .gq-track {
+    flex: 1;
+    height: 5px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .gq-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #c9a84c 0%, #e8c86a 100%);
+    border-radius: 3px;
+    transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 0 10px var(--gold-glow);
+    min-width: 2px;
+  }
+
+  .gq-count {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--gold);
+    flex-shrink: 0;
+    min-width: 38px;
+    text-align: right;
+  }
+
+  /* ==============================================
+     HOME SCREEN
+  ============================================== */
+  .home-screen { background: var(--bg); }
+
+  .home-header {
+    padding: 20px 18px 12px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .app-title h1 {
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  .app-title p {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-top: 3px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Level pill */
+  .level-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 40px;
+    padding: 7px 12px 7px 9px;
+    flex-shrink: 0;
+    cursor: default;
+  }
+  .lp-icon { font-size: 17px; }
+  .lp-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--gold);
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+  .lp-xp {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    line-height: 1;
+  }
+
+  /* World cards grid */
+  .world-grid {
+    padding: 4px 14px 4px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 11px;
+  }
+
+  /* Base world card */
+  .world-card {
+    position: relative;
+    min-height: 188px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 14px;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    transition: transform 0.13s ease;
+  }
+  .world-card:active { transform: scale(0.965); }
+
+  /* World 1 — parchment */
+  .wc1 {
+    background:
+      radial-gradient(ellipse at 12% 8%,  rgba(220,188,100,0.35) 0%, transparent 48%),
+      radial-gradient(ellipse at 88% 90%, rgba(160,90,40,0.2)   0%, transparent 45%),
+      linear-gradient(155deg, #f5ecd2 0%, #e8d5a8 45%, #d9c48c 75%, #ccb076 100%);
+    box-shadow:
+      0 4px 28px rgba(184,134,11,0.22),
+      inset 0 1px 0 rgba(255,255,255,0.45);
+  }
+
+  /* Ruled-line texture overlay on parchment */
+  .wc1::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      180deg,
+      transparent 0px, transparent 26px,
+      rgba(44,26,16,0.04) 26px, rgba(44,26,16,0.04) 27px
+    );
+    pointer-events: none;
+    border-radius: var(--radius);
+  }
+
+  /* World 2 — forest */
+  .wc2 {
+    background:
+      radial-gradient(ellipse at 80% 15%, rgba(74,124,89,0.35) 0%, transparent 50%),
+      radial-gradient(ellipse at 15% 85%, rgba(50,90,55,0.25)  0%, transparent 45%),
+      linear-gradient(155deg, #0c1a0d 0%, #101e10 55%, #0a1509 100%);
+    border: 1px solid rgba(74,124,89,0.22);
+    box-shadow: 0 4px 20px rgba(50,100,60,0.12);
+  }
+
+  /* World 3 — deep space */
+  .wc3 {
+    background:
+      radial-gradient(ellipse at 55% 5%,  rgba(90,128,184,0.3) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 85%, rgba(50,70,130,0.2)  0%, transparent 40%),
+      linear-gradient(155deg, #080d1c 0%, #090e1e 55%, #060b17 100%);
+    border: 1px solid rgba(90,128,184,0.16);
+    box-shadow: 0 4px 20px rgba(70,100,160,0.1);
+  }
+
+  /* World 4 — underground amber */
+  .wc4 {
+    background:
+      radial-gradient(ellipse at 25% 75%, rgba(201,138,24,0.28) 0%, transparent 48%),
+      radial-gradient(ellipse at 75% 20%, rgba(150,90,10,0.15)  0%, transparent 40%),
+      linear-gradient(155deg, #110e08 0%, #0e0b06 55%, #090705 100%);
+    border: 1px solid rgba(201,138,24,0.2);
+    box-shadow: 0 4px 20px rgba(180,120,10,0.1);
+  }
+
+  /* Compass rose watermark (World 1 only) */
+  .compass-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-44%, -58%);
+    width: 96px;
+    height: 96px;
+    opacity: 0.1;
+    pointer-events: none;
+    color: var(--w1-ink);
+  }
+
+  /* World card content */
+  .wc-emoji {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+    font-size: 26px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    pointer-events: none;
+  }
+
+  .wc-dots {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 7px;
+  }
+
+  .wc-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    transition: background 0.3s;
+  }
+
+  /* Dot colours by world */
+  .wc1 .wc-dot        { background: rgba(44,26,16,0.14); }
+  .wc1 .wc-dot.done   { background: var(--w1-gold); box-shadow: 0 0 4px rgba(184,134,11,0.4); }
+  .wc2 .wc-dot        { background: rgba(255,255,255,0.1); }
+  .wc2 .wc-dot.done   { background: var(--w2-accent); box-shadow: 0 0 4px rgba(74,124,89,0.4); }
+  .wc3 .wc-dot        { background: rgba(255,255,255,0.1); }
+  .wc3 .wc-dot.done   { background: var(--w3-accent); box-shadow: 0 0 4px rgba(90,128,184,0.4); }
+  .wc4 .wc-dot        { background: rgba(255,255,255,0.1); }
+  .wc4 .wc-dot.done   { background: var(--w4-accent); box-shadow: 0 0 4px rgba(201,138,24,0.4); }
+
+  .wc-term {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .wc1 .wc-term { color: rgba(44,26,16,0.55); }
+  .wc2 .wc-term { color: rgba(208,234,219,0.5); }
+  .wc3 .wc-term { color: rgba(200,216,240,0.5); }
+  .wc4 .wc-term { color: rgba(240,221,176,0.5); }
+
+  .wc-name {
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .wc1 .wc-name { color: var(--w1-ink); }
+  .wc2 .wc-name { color: var(--w2-text); }
+  .wc3 .wc-name { color: var(--w3-text); }
+  .wc4 .wc-name { color: var(--w4-text); }
+
+  .wc-enter {
+    font-size: 11px;
+    font-weight: 700;
+    margin-top: 5px;
+    opacity: 0.55;
+  }
+  .wc1 .wc-enter { color: var(--w1-ink); }
+  .wc2 .wc-enter { color: var(--w2-text); }
+  .wc3 .wc-enter { color: var(--w3-text); }
+  .wc4 .wc-enter { color: var(--w4-text); }
+
+  /* Home bottom strip */
+  .home-bottom {
+    padding: 14px 18px 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .xp-readout {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  .btn-fresh {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--muted);
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 22px;
+    border-radius: 30px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-fresh:active {
+    border-color: rgba(255,90,90,0.35);
+    color: rgba(255,110,110,0.8);
+  }
+
+  /* ==============================================
+     WORLD SCREEN
+  ============================================== */
+  .world-screen { background: var(--bg); }
+
+  /* Full-screen world themes */
+  .world-screen.theme-w1 { background: linear-gradient(160deg, #f5ecd2 0%, #eddfc0 50%, #e2cfa8 100%); }
+  .world-screen.theme-w2 { background: linear-gradient(160deg, #0a1409 0%, #0c1a0c 100%); }
+  .world-screen.theme-w3 { background: linear-gradient(160deg, #060b17 0%, #080e1d 100%); }
+  .world-screen.theme-w4 { background: linear-gradient(160deg, #0b0906 0%, #100c07 100%); }
+
+  /* Grand Quest bar in World 1 theme — keep dark */
+  .world-screen.theme-w1 .gq-bar {
+    background: rgba(30,18,8,0.88);
+    border-bottom: 1px solid rgba(184,134,11,0.2);
+  }
+
+  .world-header {
+    padding: 14px 18px 18px;
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    padding: 6px 0;
+    margin-bottom: 16px;
+    -webkit-tap-highlight-color: transparent;
+    opacity: 0.55;
+    transition: opacity 0.1s;
+  }
+  .back-btn:active { opacity: 1; }
+
+  .theme-w1 .back-btn { color: var(--w1-ink); }
+  .theme-w2 .back-btn { color: var(--w2-text); }
+  .theme-w3 .back-btn { color: var(--w3-text); }
+  .theme-w4 .back-btn { color: var(--w4-text); }
+
+  .world-h-emoji {
+    display: block;
+    font-size: 42px;
+    margin-bottom: 10px;
+    line-height: 1;
+  }
+
+  .world-h-name {
+    font-size: 27px;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+  .theme-w1 .world-h-name { color: var(--w1-ink); }
+  .theme-w2 .world-h-name { color: var(--w2-text); }
+  .theme-w3 .world-h-name { color: var(--w3-text); }
+  .theme-w4 .world-h-name { color: var(--w4-text); }
+
+  .world-h-sub {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+    opacity: 0.45;
+  }
+  .theme-w1 .world-h-sub { color: var(--w1-ink); }
+  .theme-w2 .world-h-sub { color: var(--w2-text); }
+  .theme-w3 .world-h-sub { color: var(--w3-text); }
+  .theme-w4 .world-h-sub { color: var(--w4-text); }
+
+  /* World progress bar */
+  .world-prog {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 18px 18px;
+  }
+
+  .wp-label {
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .theme-w1 .wp-label { color: rgba(44,26,16,0.55); }
+  .theme-w2 .wp-label { color: rgba(74,124,89,0.8); }
+  .theme-w3 .wp-label { color: rgba(90,128,184,0.8); }
+  .theme-w4 .wp-label { color: rgba(201,138,24,0.8); }
+
+  .wp-track {
+    flex: 1;
+    height: 5px;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .theme-w1 .wp-track { background: rgba(44,26,16,0.1); }
+  .theme-w2 .wp-track { background: rgba(74,124,89,0.15); }
+  .theme-w3 .wp-track { background: rgba(90,128,184,0.12); }
+  .theme-w4 .wp-track { background: rgba(201,138,24,0.12); }
+
+  .wp-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  }
+  .theme-w1 .wp-fill { background: linear-gradient(90deg, var(--w1-gold), #d4a820); }
+  .theme-w2 .wp-fill { background: linear-gradient(90deg, #4a7c59, #60a070); }
+  .theme-w3 .wp-fill { background: linear-gradient(90deg, #5a80b8, #6a98d0); }
+  .theme-w4 .wp-fill { background: linear-gradient(90deg, #c98a18, #e0a830); }
+
+  .wp-pct {
+    font-size: 11px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .theme-w1 .wp-pct { color: var(--w1-gold); }
+  .theme-w2 .wp-pct { color: var(--w2-accent); }
+  .theme-w3 .wp-pct { color: var(--w3-accent); }
+  .theme-w4 .wp-pct { color: var(--w4-accent); }
+
+  /* Unit list */
+  .unit-list {
+    padding: 0 14px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .unit-row {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 15px 15px;
+    border-radius: 14px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.12s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .unit-row:active { transform: scale(0.98); }
+
+  .theme-w1 .unit-row { background: rgba(255,255,255,0.36); border: 1px solid rgba(184,134,11,0.22); }
+  .theme-w2 .unit-row { background: rgba(255,255,255,0.04); border: 1px solid rgba(74,124,89,0.2); }
+  .theme-w3 .unit-row { background: rgba(255,255,255,0.03); border: 1px solid rgba(90,128,184,0.16); }
+  .theme-w4 .unit-row { background: rgba(255,255,255,0.03); border: 1px solid rgba(201,138,24,0.15); }
+
+  .unit-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 900;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+  .unit-num.done { font-size: 16px; }
+
+  .theme-w1 .unit-num       { background: rgba(184,134,11,0.14); color: var(--w1-gold); }
+  .theme-w1 .unit-num.done  { background: rgba(184,134,11,0.25); color: var(--w1-gold); }
+  .theme-w2 .unit-num       { background: rgba(74,124,89,0.14);  color: var(--w2-accent); }
+  .theme-w2 .unit-num.done  { background: rgba(74,124,89,0.28);  color: #6aaa7a; }
+  .theme-w3 .unit-num       { background: rgba(90,128,184,0.12); color: var(--w3-accent); }
+  .theme-w3 .unit-num.done  { background: rgba(90,128,184,0.25); color: #7aaae0; }
+  .theme-w4 .unit-num       { background: rgba(201,138,24,0.12); color: var(--w4-accent); }
+  .theme-w4 .unit-num.done  { background: rgba(201,138,24,0.25); color: #e0aa38; }
+
+  .unit-meta { flex: 1; min-width: 0; }
+
+  .unit-name {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+  .theme-w1 .unit-name { color: var(--w1-ink); }
+  .theme-w2 .unit-name { color: var(--w2-text); }
+  .theme-w3 .unit-name { color: var(--w3-text); }
+  .theme-w4 .unit-name { color: var(--w4-text); }
+
+  .unit-sub {
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .theme-w1 .unit-sub { color: rgba(44,26,16,0.45); }
+  .theme-w2 .unit-sub { color: rgba(208,234,219,0.4); }
+  .theme-w3 .unit-sub { color: rgba(200,216,240,0.38); }
+  .theme-w4 .unit-sub { color: rgba(240,221,176,0.4); }
+
+  .unit-chevron { font-size: 16px; opacity: 0.3; flex-shrink: 0; }
+
+  /* ==============================================
+     UNIT SCREEN (Phase 3 stub)
+  ============================================== */
+  .unit-screen { background: var(--bg); }
+  .unit-screen.theme-w1 { background: linear-gradient(160deg, #f5ecd2 0%, #e2cfa8 100%); }
+  .unit-screen.theme-w2 { background: linear-gradient(160deg, #0a1409 0%, #0c1a0c 100%); }
+  .unit-screen.theme-w3 { background: linear-gradient(160deg, #060b17 0%, #080e1d 100%); }
+  .unit-screen.theme-w4 { background: linear-gradient(160deg, #0b0906 0%, #100c07 100%); }
+
+  .unit-screen.theme-w1 .gq-bar {
+    background: rgba(30,18,8,0.88);
+    border-bottom: 1px solid rgba(184,134,11,0.2);
+  }
+
+  .unit-stub {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 28px;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .stub-emoji { font-size: 52px; line-height: 1; }
+
+  .stub-title {
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin-top: 4px;
+  }
+  .unit-screen.theme-w1 .stub-title { color: var(--w1-ink); }
+  .unit-screen.theme-w2 .stub-title { color: var(--w2-text); }
+  .unit-screen.theme-w3 .stub-title { color: var(--w3-text); }
+  .unit-screen.theme-w4 .stub-title { color: var(--v4-text); }
+
+  .stub-sub {
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0.45;
+    max-width: 220px;
+    line-height: 1.5;
+  }
+  .unit-screen.theme-w1 .stub-sub { color: var(--w1-ink); }
+
+  /* ==============================================
+     MODAL: Start Fresh confirmation
+  ============================================== */
+  .modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.72);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 24px;
+  }
+  .modal-bg.open { display: flex; }
+
+  .modal-box {
+    background: #1e1b18;
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 22px;
+    padding: 28px 22px;
+    max-width: 310px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .modal-icon { font-size: 38px; margin-bottom: 12px; }
+  .modal-h    { font-size: 18px; font-weight: 900; color: var(--text); margin-bottom: 8px; }
+  .modal-p    { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 24px; }
+
+  .modal-row  { display: flex; gap: 9px; }
+
+  .modal-btn {
+    flex: 1;
+    padding: 13px;
+    border-radius: 13px;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    border: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity 0.1s;
+  }
+  .modal-btn:active { opacity: 0.75; }
+
+  .mbtn-cancel  { background: rgba(255,255,255,0.08); color: var(--text); }
+  .mbtn-confirm { background: rgba(220,50,50,0.14); color: #ff8888; border: 1px solid rgba(220,50,50,0.22); }
+
+  /* ==============================================
+     SCROLLBAR (subtle)
+  ============================================== */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+  /* ==============================================
+     UNIT SCREEN — CARD ENGINE (Phase 3)
+  ============================================== */
+  .unit-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 18px 0;
+    flex-shrink: 0;
+    min-height: 44px;
+  }
+
+  .card-counter {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .theme-w1 .card-counter { color: rgba(44,26,16,0.45); }
+  .theme-w2 .card-counter { color: rgba(208,234,219,0.45); }
+  .theme-w3 .card-counter { color: rgba(200,216,240,0.45); }
+  .theme-w4 .card-counter { color: rgba(240,221,176,0.45); }
+
+  .card-viewport {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    margin: 8px 16px 0;
+  }
+
+  .card-surface {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    padding: 22px 20px 22px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* World 1 — parchment card */
+  .theme-w1 .card-surface {
+    background: #faf3e0;
+    box-shadow: 0 6px 28px rgba(44,26,16,0.18), 0 2px 6px rgba(44,26,16,0.08);
+  }
+  /* Worlds 2-4 — dark cards */
+  .theme-w2 .card-surface {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(74,124,89,0.25);
+  }
+  .theme-w3 .card-surface {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(90,128,184,0.2);
+  }
+  .theme-w4 .card-surface {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,138,24,0.18);
+  }
+
+  /* Card emoji anchor top-right */
+  .card-emoji {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    font-size: 24px;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .card-heading {
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 14px;
+    padding-right: 42px;
+  }
+  .theme-w1 .card-heading { color: var(--w1-ink); }
+  .theme-w2 .card-heading { color: var(--w2-text); }
+  .theme-w3 .card-heading { color: var(--w3-text); }
+  .theme-w4 .card-heading { color: var(--w4-text); }
+
+  .card-body {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.7;
+  }
+  .theme-w1 .card-body { color: var(--w1-ink); }
+  .theme-w2 .card-body { color: var(--w2-text); }
+  .theme-w3 .card-body { color: var(--w3-text); }
+  .theme-w4 .card-body { color: var(--w4-text); }
+
+  /* Keyword highlights */
+  .theme-w1 .card-surface mark {
+    background: rgba(184,134,11,0.16);
+    color: var(--w1-ink);
+    border-radius: 3px;
+    padding: 1px 3px;
+    font-weight: 700;
+    -webkit-text-decoration: none;
+    text-decoration: none;
+  }
+  .theme-w1 .card-surface.card-hook mark {
+    background: rgba(201,168,76,0.22);
+    color: #f0e0b8;
+  }
+
+  /* Memory hook card — deep amber leather */
+  .theme-w1 .card-surface.card-hook {
+    background: #5c2c0a;
+    box-shadow: 0 6px 28px rgba(30,8,2,0.4);
+  }
+  .theme-w1 .card-surface.card-hook .card-heading { color: #f0e0b8; }
+  .theme-w1 .card-surface.card-hook .card-body   { color: #ddd0aa; }
+
+  /* Glossary card */
+  .gloss-hint {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-align: center;
+    margin-bottom: 12px;
+    opacity: 0.5;
+  }
+  .theme-w1 .gloss-hint { color: var(--w1-ink); }
+
+  .gloss-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .gloss-item {
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    transition: background 0.1s;
+  }
+  .theme-w1 .gloss-item {
+    background: rgba(44,26,16,0.07);
+    border: 1px solid rgba(184,134,11,0.15);
+  }
+  .theme-w1 .gloss-item:active { background: rgba(44,26,16,0.14); }
+
+  .gloss-word {
+    font-size: 13px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .theme-w1 .gloss-word { color: var(--w1-ink); }
+
+  .gloss-arrow { font-size: 11px; opacity: 0.4; transition: transform 0.15s; }
+  .gloss-item.open .gloss-arrow { transform: rotate(90deg); }
+
+  .gloss-def {
+    font-size: 13px;
+    font-weight: 400;
+    margin-top: 6px;
+    line-height: 1.55;
+    display: none;
+  }
+  .theme-w1 .gloss-def { color: rgba(44,26,16,0.75); }
+
+  /* Card navigation */
+  .card-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px 28px;
+    flex-shrink: 0;
+    gap: 10px;
+  }
+
+  .card-btn {
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 800;
+    border: none;
+    border-radius: 40px;
+    padding: 12px 24px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: opacity 0.12s, transform 0.1s;
+    min-width: 64px;
+    text-align: center;
+    line-height: 1;
+  }
+  .card-btn:active { transform: scale(0.95); opacity: 0.85; }
+  .card-btn:disabled { opacity: 0.18; pointer-events: none; }
+
+  .card-btn-prev {
+    background: rgba(44,26,16,0.1);
+    color: rgba(44,26,16,0.6);
+  }
+  .card-btn-next {
+    background: var(--w1-gold);
+    color: #fff8ec;
+  }
+  .card-btn-done {
+    background: var(--w1-wax);
+    color: #fff0e8;
+    font-size: 13px;
+    padding: 12px 20px;
+    flex: 1;
+    max-width: 260px;
+  }
+
+  /* Stub card for worlds 2-4 */
+  .card-stub {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 10px;
+    text-align: center;
+    padding: 24px;
+  }
+  .card-stub-emoji { font-size: 44px; line-height: 1; }
+  .card-stub-title { font-size: 18px; font-weight: 900; line-height: 1.2; }
+  .card-stub-sub   { font-size: 13px; font-weight: 600; opacity: 0.4; line-height: 1.5; max-width: 220px; }
+  .theme-w2 .card-stub-title { color: var(--w2-text); }
+  .theme-w2 .card-stub-sub   { color: var(--w2-text); }
+  .theme-w3 .card-stub-title { color: var(--w3-text); }
+  .theme-w3 .card-stub-sub   { color: var(--w3-text); }
+  .theme-w4 .card-stub-title { color: var(--w4-text); }
+  .theme-w4 .card-stub-sub   { color: var(--w4-text); }
+
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ============================================
+       SCREEN: HOME
+  ============================================ -->
+  <div id="s-home" class="screen home-screen">
+
+    <div class="gq-bar">
+      <div class="gq-label">Grand Quest</div>
+      <div class="gq-track"><div id="gq0" class="gq-fill" style="width:0%"></div></div>
+      <div id="gqc0" class="gq-count">0 / 15</div>
+    </div>
+
+    <div class="home-header">
+      <div class="app-title">
+        <h1>GeoQuest</h1>
+        <p>Grade 5 Geography</p>
+      </div>
+      <div class="level-pill">
+        <span id="lp-icon" class="lp-icon">🧭</span>
+        <div>
+          <div id="lp-title" class="lp-title">Lost Traveller</div>
+          <div id="lp-xp"    class="lp-xp">0 XP</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="world-grid" class="world-grid"></div>
+
+    <div class="home-bottom">
+      <div id="xp-readout" class="xp-readout">0 XP earned</div>
+      <button class="btn-fresh" onclick="askFresh()">Start Fresh</button>
+    </div>
+
+  </div>
+
+  <!-- ============================================
+       SCREEN: WORLD
+  ============================================ -->
+  <div id="s-world" class="screen world-screen">
+
+    <div class="gq-bar">
+      <div class="gq-label">Grand Quest</div>
+      <div class="gq-track"><div id="gq1" class="gq-fill" style="width:0%"></div></div>
+      <div id="gqc1" class="gq-count">0 / 15</div>
+    </div>
+
+    <div class="world-header">
+      <button class="back-btn" onclick="go('home')">&#8592; Home</button>
+      <span id="wh-emoji" class="world-h-emoji">🪄</span>
+      <div id="wh-name" class="world-h-name">World name</div>
+      <div id="wh-sub"  class="world-h-sub">Term</div>
+    </div>
+
+    <div class="world-prog">
+      <div class="wp-label">Progress</div>
+      <div class="wp-track"><div id="wp-fill" class="wp-fill" style="width:0%"></div></div>
+      <div id="wp-pct" class="wp-pct">0%</div>
+    </div>
+
+    <div id="unit-list" class="unit-list"></div>
+
+  </div>
+
+  <!-- ============================================
+       SCREEN: UNIT  (Phase 3 — card engine)
+  ============================================ -->
+  <div id="s-unit" class="screen unit-screen">
+
+    <div class="gq-bar">
+      <div class="gq-label">Grand Quest</div>
+      <div class="gq-track"><div id="gq2" class="gq-fill" style="width:0%"></div></div>
+      <div id="gqc2" class="gq-count">0 / 15</div>
+    </div>
+
+    <div class="unit-top-bar">
+      <button id="unit-back" class="back-btn" onclick="goBack()">&#8592; Back</button>
+      <div id="card-counter" class="card-counter"></div>
+    </div>
+
+    <div id="card-viewport" class="card-viewport">
+      <div id="card-surface" class="card-surface">
+        <!-- rendered by JS -->
+      </div>
+    </div>
+
+    <div id="card-nav" class="card-nav">
+      <button id="btn-prev" class="card-btn card-btn-prev" onclick="prevCard()">&#8592;</button>
+      <button id="btn-next" class="card-btn card-btn-next" onclick="nextCard()">&#8594;</button>
+    </div>
+
+  </div>
+
+  <!-- ============================================
+       MODAL: Start Fresh
+  ============================================ -->
+  <div id="modal" class="modal-bg">
+    <div class="modal-box">
+      <div class="modal-icon">🔄</div>
+      <div class="modal-h">Start Fresh?</div>
+      <div class="modal-p">This wipes all your progress, XP, and unit scores. It can't be undone.</div>
+      <div class="modal-row">
+        <button class="modal-btn mbtn-cancel"  onclick="closeFresh()">Cancel</button>
+        <button class="modal-btn mbtn-confirm" onclick="doFresh()">Reset Everything</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+
+/* ============================================
+   CONFIG
+   -- UPDATE BASE to match your GitHub repo name.
+   -- Example: repo is 'geoquest' on your account →
+      BASE = '/geoquest/'
+   -- If it's a user page (username.github.io with
+      no sub-path) use BASE = '/'
+============================================ */
+var BASE = '/geoquest/';
+
+/* ============================================
+   WORLD + UNIT DATA
+============================================ */
+var WORLDS = [
+  {
+    id: 1, key: 'w1',
+    name: "The Marauder's Atlas",
+    theme: 'Hogwarts / Harry Potter',
+    term: 'Term 1: Map Skills',
+    emoji: '🪄',
+    units: [
+      { id: 'w1u1', name: 'World Map & Compass Directions', emoji: '🧭' },
+      { id: 'w1u2', name: 'Africa Our Continent',           emoji: '🌍' },
+      { id: 'w1u3', name: 'A Physical Map of Africa',       emoji: '🗺️' },
+      { id: 'w1u4', name: 'Images of Africa',               emoji: '📷' }
+    ]
+  },
+  {
+    id: 2, key: 'w2',
+    name: 'The Clan Territories',
+    theme: 'Warriors',
+    term: 'Term 2: Physical Features',
+    emoji: '🐾',
+    units: [
+      { id: 'w2u1', name: 'South Africa from Above',                   emoji: '✈️' },
+      { id: 'w2u2', name: 'Physical Features',                          emoji: '⛰️' },
+      { id: 'w2u3', name: 'Rivers',                                     emoji: '🌊' },
+      { id: 'w2u4', name: 'Physical Features & Human Activities',       emoji: '🏘️' }
+    ]
+  },
+  {
+    id: 3, key: 'w3',
+    name: 'The Pale Frontier',
+    theme: 'Lightfall / Destiny',
+    term: 'Term 3: Weather & Climate',
+    emoji: '🌌',
+    units: [
+      { id: 'w3u1', name: 'Weather',            emoji: '☁️' },
+      { id: 'w3u2', name: 'Rainfall',           emoji: '🌧️' },
+      { id: 'w3u3', name: 'Climate',            emoji: '☀️' },
+      { id: 'w3u4', name: 'Natural Vegetation', emoji: '🌵' }
+    ]
+  },
+  {
+    id: 4, key: 'w4',
+    name: 'Wakanda Underground',
+    theme: 'Marvel / Wakanda',
+    term: 'Term 4: Minerals & Mining',
+    emoji: '💎',
+    units: [
+      { id: 'w4u1', name: 'Mineral & Coal Resources',   emoji: '⛏️' },
+      { id: 'w4u2', name: 'Mining & the Environment',   emoji: '🌿' },
+      { id: 'w4u3', name: 'Mining & People',            emoji: '👥' }
+    ]
+  }
+];
+
+var TOTAL = 0;
+for (var _i = 0; _i < WORLDS.length; _i++) TOTAL += WORLDS[_i].units.length;
+// TOTAL = 15
+
+var LEVELS = [
+  { title: 'Lost Traveller',    icon: '🧭', xp: 0   },
+  { title: 'Scout',             icon: '🗺️', xp: 50  },
+  { title: 'Ranger',            icon: '⛺', xp: 120 },
+  { title: 'Pathfinder',        icon: '🔭', xp: 220 },
+  { title: 'Cartographer',      icon: '📍', xp: 360 },
+  { title: 'Master Geographer', icon: '🌍', xp: 540 }
+];
+
+/* ============================================
+   CARD DATA — World 1 (Marauder's Atlas)
+   card types: 'info' | 'hook' | 'gloss'
+   info/hook: { type, emoji, head, body }  — body = HTML with <mark>
+   gloss:     { type, terms: [{w, d}] }    — tap to reveal
+============================================ */
+var CARDS = {
+
+  /* --- Unit 1: World Map & Compass Directions --- */
+  'w1u1': [
+    {
+      type: 'info', emoji: '🗺️',
+      head: 'Two kinds of maps',
+      body: 'Maps come in two main types. A <mark>political map</mark> shows country borders and capital cities. A <mark>physical map</mark> shows rivers, mountains, deserts, and the height of the land. Both types use a key to explain their symbols.'
+    },
+    {
+      type: 'info', emoji: '🧭',
+      head: 'The four cardinal directions',
+      body: 'The four main compass directions are called <mark>cardinal directions</mark>. They are <mark>North</mark>, <mark>South</mark>, <mark>East</mark>, and <mark>West</mark>. On most maps, North points to the top of the page. A compass needle always points North.'
+    },
+    {
+      type: 'info', emoji: '↗️',
+      head: 'The eight compass points',
+      body: 'Between the four cardinal directions are four more points. <mark>North-East (NE)</mark> sits between North and East. <mark>North-West (NW)</mark> sits between North and West. <mark>South-East (SE)</mark> and <mark>South-West (SW)</mark> complete the <mark>compass rose</mark> — all eight points together.'
+    },
+    {
+      type: 'info', emoji: '🌍',
+      head: 'Finding direction between countries',
+      body: 'Start at the first country. Look at where the second country sits on the map. If it is above and to the right, it is <mark>north-east</mark>. Germany is north-west of South Africa. Australia is south-east of India. Uruguay is south-west of Germany.'
+    },
+    {
+      type: 'info', emoji: '🌐',
+      head: 'The equator',
+      body: 'The <mark>equator</mark> is a line around the middle of the Earth. It divides the Earth into the <mark>Northern Hemisphere</mark> (above) and the <mark>Southern Hemisphere</mark> (below). Countries on the equator get direct, strong sunlight all year. South Africa lies south of the equator.'
+    },
+    {
+      type: 'info', emoji: '📐',
+      head: 'Practice — compass directions',
+      body: 'Put your finger on the first country. Move toward the second. Going up-right? That is <mark>north-east</mark>. Up-left? <mark>North-west</mark>. Down-right? <mark>South-east</mark>. Down-left? <mark>South-west</mark>. Straight up, down, left, or right = one of the four cardinal directions.'
+    },
+    {
+      type: 'hook', emoji: '✨',
+      head: 'Memory spell — compass directions',
+      body: 'Picture the Marauder\'s Map unrolling on a table. North is the top of the map — Hogwarts, high in the mountains. South is the bottom — the Forbidden Forest. East is right (like turning a page), West is left. The in-betweens — NE, NW, SE, SW — are the secret passages. Eight points. Eight passages. Solemnly swear you\'ve got it.'
+    },
+    {
+      type: 'gloss',
+      terms: [
+        { w: 'Cardinal directions', d: 'The four main compass directions: North, South, East, and West.' },
+        { w: 'Compass rose', d: 'A symbol on a map showing all eight compass directions.' },
+        { w: 'Equator', d: 'The line around the middle of the Earth, dividing it into Northern and Southern Hemispheres.' },
+        { w: 'Northern Hemisphere', d: 'The half of the Earth that lies above the equator.' },
+        { w: 'Southern Hemisphere', d: 'The half of the Earth below the equator. South Africa is here.' },
+        { w: 'Political map', d: 'A map showing country borders and capital cities.' },
+        { w: 'Physical map', d: 'A map showing rivers, mountains, deserts, and land height.' }
+      ]
+    }
+  ],
+
+  /* --- Unit 2: Africa Our Continent --- */
+  'w1u2': [
+    {
+      type: 'info', emoji: '🌊',
+      head: 'The oceans around Africa',
+      body: 'Africa has water on all sides. The <mark>Atlantic Ocean</mark> lies to the west. The <mark>Indian Ocean</mark> lies to the east. The <mark>Mediterranean Sea</mark> runs along the north coast of Africa. Knowing which ocean is which side is one of the most tested facts in this unit.'
+    },
+    {
+      type: 'info', emoji: '🌍',
+      head: 'Africa on the world map',
+      body: 'Africa is the second largest continent on Earth. The <mark>equator</mark> runs through the middle of Africa from west to east. <mark>Algeria</mark> is the largest country in Africa. Five equator countries have coastlines: Gabon, Congo, DRC, Kenya, and Somalia.'
+    },
+    {
+      type: 'info', emoji: '🏙️',
+      head: 'Countries and capital cities',
+      body: 'Key capital cities to know: <mark>Windhoek</mark> is the capital of Namibia. <mark>Dar es Salaam</mark> is the capital of Tanzania. <mark>Maputo</mark> is the capital of Mozambique. <mark>Nairobi</mark> is the capital of Kenya. <mark>Cairo</mark> is the capital of Egypt.'
+    },
+    {
+      type: 'info', emoji: '🇿🇦',
+      head: 'South Africa\'s two capital cities',
+      body: 'South Africa has two capital cities. <mark>Pretoria</mark> is in Gauteng — it is the administrative capital, where government departments are based. <mark>Cape Town</mark> is in the Western Cape — it is the legislative capital, where Parliament meets. These are the only two tested at Grade 5.'
+    },
+    {
+      type: 'info', emoji: '🔒',
+      head: 'Landlocked countries',
+      body: 'A <mark>landlocked</mark> country has no coastline. It is completely surrounded by other countries. <mark>Zimbabwe</mark> and <mark>Chad</mark> are landlocked examples you must know. <mark>South Africa</mark> and <mark>Tanzania</mark> both have coastlines. Botswana, Lesotho, and Eswatini are also landlocked.'
+    },
+    {
+      type: 'info', emoji: '🗺️',
+      head: 'Countries that border South Africa',
+      body: 'South Africa shares borders with six countries. Two have coastlines: <mark>Namibia</mark> to the north-west (capital: Windhoek) and <mark>Mozambique</mark> to the north-east (capital: Maputo). The other four — Botswana, Zimbabwe, Lesotho, and Eswatini — are all landlocked.'
+    },
+    {
+      type: 'info', emoji: '🌐',
+      head: 'Landlocked neighbours of South Africa',
+      body: '<mark>Lesotho</mark> is entirely surrounded by South Africa — its capital is <mark>Maseru</mark>. <mark>Eswatini</mark> is bordered by South Africa and Mozambique — its capital is <mark>Mbabane</mark>. The Congo River flows west into the Atlantic Ocean, crossing the equator twice on its way.'
+    },
+    {
+      type: 'hook', emoji: '✨',
+      head: 'Memory spell — Africa\'s oceans',
+      body: 'Imagine Africa as a shield in the centre of the world map. Its left side faces west — that\'s the Atlantic Ocean, where the sun sets. Its right side faces east — that\'s the Indian Ocean, where the sun rises over Asia. At the very top, the Mediterranean Sea connects Africa to Europe like a moat connecting castles. West = Atlantic. East = Indian. North = Mediterranean. Three sides, three water bodies.'
+    },
+    {
+      type: 'gloss',
+      terms: [
+        { w: 'Landlocked', d: 'A country with no coastline, completely surrounded by other countries.' },
+        { w: 'Coastline', d: 'The border between land and the ocean or sea.' },
+        { w: 'Capital city', d: 'The city where a country\'s government is based.' },
+        { w: 'Atlantic Ocean', d: 'The ocean on the west side of Africa.' },
+        { w: 'Indian Ocean', d: 'The ocean on the east side of Africa.' },
+        { w: 'Mediterranean Sea', d: 'The sea along the north coast of Africa.' },
+        { w: 'Pretoria', d: 'South Africa\'s administrative capital, located in Gauteng.' },
+        { w: 'Cape Town', d: 'South Africa\'s legislative capital, located in the Western Cape.' },
+        { w: 'Windhoek', d: 'Capital city of Namibia.' },
+        { w: 'Maputo', d: 'Capital city of Mozambique.' }
+      ]
+    }
+  ],
+
+  /* --- Unit 3: A Physical Map of Africa --- */
+  'w1u3': [
+    {
+      type: 'info', emoji: '🗺️',
+      head: 'Physical vs political maps',
+      body: 'A <mark>physical map</mark> uses colour and shading to show what the land looks like — rivers, mountains, deserts, and lakes. A <mark>political map</mark> shows country borders and capital cities. Knowing which type shows which features is a tested skill.'
+    },
+    {
+      type: 'info', emoji: '🏜️',
+      head: 'The Sahara Desert',
+      body: 'The <mark>Sahara Desert</mark> is the largest hot, sandy desert in the world. It covers most of northern Africa. Countries including Algeria, Mali, Niger, and Chad contain large parts of the Sahara. Very few plants and animals can survive its extreme heat and lack of water.'
+    },
+    {
+      type: 'info', emoji: '💧',
+      head: 'The Nile River',
+      body: 'The <mark>Nile River</mark> is the longest river in the world. It starts in <mark>Lake Victoria</mark> and flows north all the way to the <mark>Mediterranean Sea</mark>. The Nile passes through Uganda, Sudan, and Egypt. Ancient civilisations grew up along its banks because of the fertile soil left behind by floods.'
+    },
+    {
+      type: 'info', emoji: '🌊',
+      head: 'Lake Victoria and the Congo River',
+      body: '<mark>Lake Victoria</mark> is the largest lake in Africa and the starting point of the Nile River. The <mark>Congo River</mark> is a separate river — it winds through the rainforest, crosses the equator twice, and flows west into the <mark>Atlantic Ocean</mark>.'
+    },
+    {
+      type: 'info', emoji: '🏔️',
+      head: 'Africa\'s highest mountains',
+      body: '<mark>Mount Kilimanjaro</mark> is the highest point in all of Africa at 5 895 m. It is in Tanzania. <mark>Thabana Ntlenyana</mark> is the highest peak in the <mark>uKhahlamba-Drakensberg</mark> mountains at 3 482 m. It sits in Lesotho, not in South Africa.'
+    },
+    {
+      type: 'info', emoji: '💦',
+      head: 'Africa\'s great waterfalls',
+      body: '<mark>Victoria Falls</mark> is the biggest waterfall in the world. It sits on the border between Zimbabwe and Zambia. <mark>Maletsunyane Falls</mark> is the highest waterfall in southern Africa and is located in Lesotho. Both are physical features shown on physical maps.'
+    },
+    {
+      type: 'info', emoji: '🌀',
+      head: 'Rivers of southern Africa',
+      body: 'The <mark>Orange River</mark> is the longest river in South Africa. It flows west into the <mark>Atlantic Ocean</mark>. The <mark>Limpopo River</mark> forms the border between South Africa and Zimbabwe. <mark>Beitbridge</mark> is the border crossing that spans the Limpopo River.'
+    },
+    {
+      type: 'info', emoji: '⛰️',
+      head: 'The uKhahlamba-Drakensberg',
+      body: 'The <mark>uKhahlamba-Drakensberg</mark> is the major mountain range along South Africa\'s eastern edge. It runs through KwaZulu-Natal and extends into Lesotho. It is a UNESCO World Heritage site famous for ancient San rock art. Its highest peak, Thabana Ntlenyana, is in Lesotho at 3 482 m.'
+    },
+    {
+      type: 'hook', emoji: '✨',
+      head: 'Memory spell — rivers and their destinations',
+      body: 'The trick: the Orange River flows west — same direction as the setting sun — into the Atlantic Ocean on the west coast. The Congo also flows west into the Atlantic. But the Nile goes north — all the way past the pyramids — into the Mediterranean Sea at the top of Africa. Two go west, one goes north. Picture three arrows on the Marauder\'s Map pointing the way out of Africa.'
+    },
+    {
+      type: 'gloss',
+      terms: [
+        { w: 'Physical map', d: 'A map showing land features: rivers, mountains, deserts, and lakes.' },
+        { w: 'Sahara Desert', d: 'The largest hot, sandy desert in the world, covering northern Africa.' },
+        { w: 'Nile River', d: 'The longest river in the world. Starts in Lake Victoria, flows north to the Mediterranean Sea.' },
+        { w: 'Lake Victoria', d: 'The largest lake in Africa and the source of the Nile River.' },
+        { w: 'Congo River', d: 'A major river crossing the equator twice, flowing west into the Atlantic Ocean.' },
+        { w: 'Mount Kilimanjaro', d: 'The highest point in Africa at 5 895 m, located in Tanzania.' },
+        { w: 'Thabana Ntlenyana', d: 'The highest peak in the uKhahlamba-Drakensberg at 3 482 m, located in Lesotho.' },
+        { w: 'uKhahlamba-Drakensberg', d: 'The major mountain range along South Africa\'s eastern edge, extending into Lesotho.' },
+        { w: 'Victoria Falls', d: 'The biggest waterfall in the world, on the border of Zimbabwe and Zambia.' },
+        { w: 'Maletsunyane Falls', d: 'The highest waterfall in southern Africa, located in Lesotho.' },
+        { w: 'Orange River', d: 'The longest river in South Africa, flowing west into the Atlantic Ocean.' },
+        { w: 'Limpopo River', d: 'The river forming the border between South Africa and Zimbabwe. Beitbridge crosses it.' },
+        { w: 'Beitbridge', d: 'The border crossing over the Limpopo River between South Africa and Zimbabwe.' }
+      ]
+    }
+  ],
+
+  /* --- Unit 4: Images of Africa --- */
+  'w1u4': [
+    {
+      type: 'info', emoji: '📷',
+      head: 'Using photographs as sources',
+      body: 'A <mark>photograph</mark> is a source that shows how places look and how people live. Geographers read photographs the same way historians read documents — they look for evidence and clues. Africa contains ancient villages, modern cities, farmland, and wilderness, sometimes in the same country.'
+    },
+    {
+      type: 'info', emoji: '🏘️',
+      head: 'Villages in Africa',
+      body: 'A <mark>village</mark> is a small community in a <mark>rural</mark> area. Villages often have traditional housing built from local materials. People may grow their own food or keep animals nearby. Villages have fewer services than cities — fewer schools, hospitals, and shops.'
+    },
+    {
+      type: 'info', emoji: '🏙️',
+      head: 'Cities in Africa',
+      body: 'A <mark>city</mark> is a large settlement with many people, buildings, and services. Cities have tarred roads, tall buildings, busy markets, and many residents. African cities like Cairo, Lagos, Nairobi, and Cape Town are among the largest in the world. City areas are called <mark>urban</mark> areas.'
+    },
+    {
+      type: 'info', emoji: '🌾',
+      head: 'Subsistence farming',
+      body: '<mark>Subsistence farming</mark> is when a family grows or raises just enough food for themselves. They do not usually sell their produce — it all goes to feeding the household. Subsistence farmers depend on rainfall and use simple tools. This type of farming is common in rural parts of Africa.'
+    },
+    {
+      type: 'info', emoji: '👁️',
+      head: 'Reading photographs — what to look for',
+      body: 'When reading a photograph, ask: is this <mark>urban</mark> or <mark>rural</mark>? Clues for a city: concrete buildings, tarred roads, crowds. Clues for a village: simple structures, open land, animals nearby. Clues for subsistence farming: people working the soil with basic tools, crops growing close to a simple home.'
+    },
+    {
+      type: 'hook', emoji: '✨',
+      head: 'Memory spell — village, city, farm',
+      body: 'Think of it like the wizarding world. A city is Diagon Alley — packed, loud, tall buildings, everything for sale. A village is Godric\'s Hollow — quiet, small, everyone knows everyone. Subsistence farming? That\'s the Weasleys\' garden — just enough food for the family, grown with hard work (and a bit of magic). One photograph, one question: which one are you looking at?'
+    },
+    {
+      type: 'gloss',
+      terms: [
+        { w: 'Photograph as source', d: 'A photograph used as evidence to understand how places look or how people live.' },
+        { w: 'Village', d: 'A small community in a rural area, usually with traditional housing.' },
+        { w: 'City', d: 'A large urban settlement with many people, buildings, and services.' },
+        { w: 'Urban', d: 'Relating to a city or large town.' },
+        { w: 'Rural', d: 'Relating to the countryside or areas outside cities and towns.' },
+        { w: 'Subsistence farming', d: 'Farming that produces just enough food for the family\'s own use, not for selling.' }
+      ]
+    }
+  ]
+
+};
+
+/* ============================================
+   STATE
+   Saved to localStorage under key 'gq_v1'.
+   Each unit entry: { done: bool, hi: number, perfect: bool }
+   hi = best score percentage (0-100)
+============================================ */
+var KEY = 'gq_v1';
+var state = {};
+
+function mkState() {
+  var s = { xp: 0, units: {} };
+  for (var wi = 0; wi < WORLDS.length; wi++) {
+    var w = WORLDS[wi];
+    for (var ui = 0; ui < w.units.length; ui++) {
+      s.units[w.units[ui].id] = { done: false, hi: 0, perfect: false };
+    }
+  }
+  return s;
+}
+
+function loadState() {
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) {
+      var saved = JSON.parse(raw);
+      var fresh = mkState();
+      fresh.xp = saved.xp || 0;
+      for (var k in saved.units) {
+        if (fresh.units[k] !== undefined) {
+          fresh.units[k] = saved.units[k];
+        }
+      }
+      return fresh;
+    }
+  } catch(e) {}
+  return mkState();
+}
+
+function saveState() {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+/* ============================================
+   COMPUTED
+============================================ */
+function doneCount() {
+  var n = 0;
+  for (var k in state.units) { if (state.units[k].done) n++; }
+  return n;
+}
+
+function worldDone(wkey) {
+  var world = getWorld(wkey);
+  if (!world) return 0;
+  var n = 0;
+  for (var ui = 0; ui < world.units.length; ui++) {
+    if (state.units[world.units[ui].id] && state.units[world.units[ui].id].done) n++;
+  }
+  return n;
+}
+
+function curLevel() {
+  var l = 0;
+  for (var i = LEVELS.length - 1; i >= 0; i--) {
+    if (state.xp >= LEVELS[i].xp) { l = i; break; }
+  }
+  return l;
+}
+
+function getWorld(idOrKey) {
+  for (var i = 0; i < WORLDS.length; i++) {
+    if (WORLDS[i].id === idOrKey || WORLDS[i].key === idOrKey) return WORLDS[i];
+  }
+  return null;
+}
+
+function getUnit(uid) {
+  for (var wi = 0; wi < WORLDS.length; wi++) {
+    var w = WORLDS[wi];
+    for (var ui = 0; ui < w.units.length; ui++) {
+      if (w.units[ui].id === uid) return { world: w, unit: w.units[ui], idx: ui };
+    }
+  }
+  return null;
+}
+
+/* ============================================
+   NAVIGATION
+============================================ */
+var curView  = 'home';
+var curWid   = 1;
+var curUid   = null;
+var curCardIdx  = 0;
+var touchStartX = 0;
+var touchStartY = 0;
+
+function go(view, arg1, arg2) {
+  var screens = document.querySelectorAll('.screen');
+  for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
+
+  curView = view;
+
+  if (view === 'home') {
+    rHome();
+    document.getElementById('s-home').classList.add('active');
+  } else if (view === 'world') {
+    curWid = arg1;
+    rWorld(arg1);
+    document.getElementById('s-world').classList.add('active');
+  } else if (view === 'unit') {
+    curWid = arg1;
+    curUid = arg2;
+    rUnit(arg1, arg2);
+    document.getElementById('s-unit').classList.add('active');
+  }
+}
+
+function goBack() {
+  if (curView === 'unit') go('world', curWid);
+  else go('home');
+}
+
+/* ============================================
+   RENDER HELPERS
+============================================ */
+
+/* Update all GQ bars across screens */
+function rGQ() {
+  var done = doneCount();
+  var pct  = TOTAL > 0 ? Math.round((done / TOTAL) * 100) : 0;
+  var ids  = ['gq0','gq1','gq2'];
+  var cids = ['gqc0','gqc1','gqc2'];
+  for (var i = 0; i < ids.length; i++) {
+    var f = document.getElementById(ids[i]);
+    var c = document.getElementById(cids[i]);
+    if (f) f.style.width = pct + '%';
+    if (c) c.textContent = done + ' / ' + TOTAL;
+  }
+}
+
+/* Compass rose SVG (decorative, World 1 card only) */
+function rose() {
+  return '<svg class="compass-watermark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">'
+    + '<circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="1.2"/>'
+    + '<circle cx="50" cy="50" r="4.5" fill="currentColor"/>'
+    + '<polygon points="50,7 46.5,49 53.5,49" fill="currentColor"/>'
+    + '<polygon points="50,93 46.5,51 53.5,51" fill="currentColor" opacity="0.45"/>'
+    + '<polygon points="93,50 51,46.5 51,53.5" fill="currentColor" opacity="0.45"/>'
+    + '<polygon points="7,50 49,46.5 49,53.5" fill="currentColor" opacity="0.45"/>'
+    + '<text x="50" y="19" text-anchor="middle" font-size="11" font-weight="900" font-family="Nunito,sans-serif" fill="currentColor">N</text>'
+    + '<text x="50" y="89" text-anchor="middle" font-size="9"  font-family="Nunito,sans-serif" fill="currentColor" opacity="0.45">S</text>'
+    + '<text x="86" y="55" text-anchor="middle" font-size="9"  font-family="Nunito,sans-serif" fill="currentColor" opacity="0.45">E</text>'
+    + '<text x="14" y="55" text-anchor="middle" font-size="9"  font-family="Nunito,sans-serif" fill="currentColor" opacity="0.45">W</text>'
+    + '</svg>';
+}
+
+/* ============================================
+   RENDER: Home
+============================================ */
+function rHome() {
+  rGQ();
+
+  var lvl   = curLevel();
+  var ldata = LEVELS[lvl];
+  document.getElementById('lp-icon').textContent  = ldata.icon;
+  document.getElementById('lp-title').textContent = ldata.title;
+  document.getElementById('lp-xp').textContent    = state.xp + ' XP';
+  document.getElementById('xp-readout').textContent = state.xp + ' XP earned';
+
+  var html = '';
+  for (var wi = 0; wi < WORLDS.length; wi++) {
+    var w     = WORLDS[wi];
+    var done  = worldDone(w.key);
+    var total = w.units.length;
+
+    var dots = '';
+    for (var ui = 0; ui < total; ui++) {
+      var isDone = state.units[w.units[ui].id] && state.units[w.units[ui].id].done;
+      dots += '<div class="wc-dot' + (isDone ? ' done' : '') + '"></div>';
+    }
+
+    html += '<div class="world-card wc' + w.id + '" onclick="go(\'world\',' + w.id + ')">'
+      + (w.id === 1 ? rose() : '')
+      + '<div class="wc-emoji">' + w.emoji + '</div>'
+      + '<div class="wc-dots">' + dots + '</div>'
+      + '<div class="wc-term">' + w.term + '</div>'
+      + '<div class="wc-name">' + w.name + '</div>'
+      + '<div class="wc-enter">' + done + '/' + total + ' units &rarr;</div>'
+      + '</div>';
+  }
+
+  document.getElementById('world-grid').innerHTML = html;
+}
+
+/* ============================================
+   RENDER: World
+============================================ */
+function rWorld(wid) {
+  var w = getWorld(wid);
+  if (!w) return;
+  rGQ();
+
+  var ws = document.getElementById('s-world');
+  ws.className = 'screen world-screen theme-' + w.key;
+
+  document.getElementById('wh-emoji').textContent = w.emoji;
+  document.getElementById('wh-name').textContent  = w.name;
+  document.getElementById('wh-sub').textContent   = w.term;
+
+  var done  = worldDone(w.key);
+  var total = w.units.length;
+  var pct   = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById('wp-fill').style.width = pct + '%';
+  document.getElementById('wp-pct').textContent  = pct + '%';
+
+  var html = '';
+  for (var ui = 0; ui < w.units.length; ui++) {
+    var u      = w.units[ui];
+    var us     = state.units[u.id];
+    var isDone = us && us.done;
+    var numTxt = isDone ? '✓' : (ui + 1);
+    var subTxt = isDone
+      ? 'Best score: ' + (us.hi || 0) + '%'
+      : 'Ready to study';
+
+    html += '<div class="unit-row" onclick="go(\'unit\',' + wid + ',\'' + u.id + '\')">'
+      + '<div class="unit-num' + (isDone ? ' done' : '') + '">' + numTxt + '</div>'
+      + '<div class="unit-meta">'
+      +   '<div class="unit-name">' + u.name + '</div>'
+      +   '<div class="unit-sub">' + subTxt + '</div>'
+      + '</div>'
+      + '<div class="unit-chevron">&#203A;</div>'
+      + '</div>';
+  }
+
+  document.getElementById('unit-list').innerHTML = html;
+}
+
+/* ============================================
+   RENDER: Unit — card engine
+============================================ */
+function rUnit(wid, uid) {
+  var w   = getWorld(wid);
+  var res = getUnit(uid);
+  if (!w || !res) return;
+  rGQ();
+
+  var us = document.getElementById('s-unit');
+  us.className = 'screen unit-screen theme-' + w.key;
+
+  document.getElementById('unit-back').textContent = '\u2190 ' + w.name;
+
+  var cards = CARDS[uid];
+
+  if (!cards) {
+    /* Stub for worlds 2-4 */
+    document.getElementById('card-counter').textContent = '';
+    document.getElementById('card-surface').className = 'card-surface';
+    document.getElementById('card-surface').innerHTML =
+      '<div class="card-stub">'
+      + '<div class="card-stub-emoji">' + res.unit.emoji + '</div>'
+      + '<div class="card-stub-title">' + res.unit.name + '</div>'
+      + '<div class="card-stub-sub">Study cards coming soon</div>'
+      + '</div>';
+    document.getElementById('btn-prev').style.visibility = 'hidden';
+    document.getElementById('btn-next').style.visibility = 'hidden';
+    return;
+  }
+
+  /* World 1 — full card experience */
+  document.getElementById('btn-prev').style.visibility = 'visible';
+  document.getElementById('btn-next').style.visibility = 'visible';
+  curCardIdx = 0;
+
+  /* Touch / swipe events */
+  var vp = document.getElementById('card-viewport');
+  vp.ontouchstart = function(e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  };
+  vp.ontouchend = function(e) {
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    var dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 44) {
+      if (dx < 0) nextCard();
+      else prevCard();
+    }
+  };
+
+  showCard(0, null);
+}
+
+function buildCardHTML(card) {
+  if (card.type === 'gloss') {
+    var h = '<div class="card-emoji">📖</div>'
+      + '<div class="card-heading">Keyword Glossary</div>'
+      + '<div class="gloss-hint">Tap a term to see its definition</div>'
+      + '<div class="gloss-list">';
+    for (var i = 0; i < card.terms.length; i++) {
+      h += '<div class="gloss-item" id="gi-' + i + '" onclick="toggleGloss(' + i + ')">'
+        +   '<div class="gloss-word">' + card.terms[i].w + '<span class="gloss-arrow">&#8250;</span></div>'
+        +   '<div class="gloss-def" id="gd-' + i + '">' + card.terms[i].d + '</div>'
+        + '</div>';
+    }
+    h += '</div>';
+    return h;
+  }
+  return '<div class="card-emoji">' + card.emoji + '</div>'
+    + '<div class="card-heading">' + card.head + '</div>'
+    + '<div class="card-body">' + card.body + '</div>';
+}
+
+function showCard(idx, direction) {
+  var cards = CARDS[curUid];
+  if (!cards) return;
+  var card  = cards[idx];
+  var surface = document.getElementById('card-surface');
+  var counter = document.getElementById('card-counter');
+  var btnPrev = document.getElementById('btn-prev');
+  var btnNext = document.getElementById('btn-next');
+
+  counter.textContent = 'Card ' + (idx + 1) + ' of ' + cards.length;
+
+  btnPrev.disabled = (idx === 0);
+
+  if (idx === cards.length - 1) {
+    btnNext.textContent = '\u2190 Back to World';
+    btnNext.className = 'card-btn card-btn-done';
+  } else {
+    btnNext.textContent = '\u2192';
+    btnNext.className = 'card-btn card-btn-next';
+    btnNext.disabled = false;
+  }
+
+  var doRender = function() {
+    surface.className = 'card-surface' + (card.type === 'hook' ? ' card-hook' : '');
+    surface.innerHTML = buildCardHTML(card);
+    surface.scrollTop = 0;
+  };
+
+  if (!direction) {
+    doRender();
+    return;
+  }
+
+  /* Slide out */
+  surface.style.transition = 'transform 0.12s ease, opacity 0.12s ease';
+  surface.style.transform  = direction === 'next' ? 'translateX(-36px)' : 'translateX(36px)';
+  surface.style.opacity    = '0';
+
+  setTimeout(function() {
+    doRender();
+    surface.style.transition = 'none';
+    surface.style.transform  = direction === 'next' ? 'translateX(36px)' : 'translateX(-36px)';
+    surface.style.opacity    = '0';
+    /* Force reflow so transition fires */
+    surface.offsetHeight;
+    surface.style.transition = 'transform 0.15s ease, opacity 0.15s ease';
+    surface.style.transform  = 'translateX(0)';
+    surface.style.opacity    = '1';
+  }, 130);
+}
+
+function nextCard() {
+  var cards = CARDS[curUid];
+  if (!cards) return;
+  if (curCardIdx >= cards.length - 1) {
+    go('world', curWid);
+    return;
+  }
+  curCardIdx++;
+  showCard(curCardIdx, 'next');
+}
+
+function prevCard() {
+  if (curCardIdx <= 0) return;
+  curCardIdx--;
+  showCard(curCardIdx, 'prev');
+}
+
+function toggleGloss(i) {
+  var def  = document.getElementById('gd-' + i);
+  var item = document.getElementById('gi-' + i);
+  if (!def) return;
+  var isOpen = def.style.display === 'block';
+  def.style.display = isOpen ? 'none' : 'block';
+  if (item) {
+    if (isOpen) item.classList.remove('open');
+    else        item.classList.add('open');
+  }
+}
+
+/* ============================================
+   START FRESH
+============================================ */
+function askFresh() {
+  document.getElementById('modal').classList.add('open');
+}
+function closeFresh() {
+  document.getElementById('modal').classList.remove('open');
+}
+function doFresh() {
+  closeFresh();
+  state = mkState();
+  saveState();
+  go('home');
+}
+
+/* ============================================
+   SERVICE WORKER REGISTRATION
+============================================ */
+function regSW() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register(BASE + 'sw.js', { scope: BASE })
+      .catch(function(e) { console.warn('SW not registered:', e); });
+  }
+}
+
+/* ============================================
+   INIT
+============================================ */
+state = loadState();
+go('home');
+regSW();
+
+</script>
+</body>
+</html>
