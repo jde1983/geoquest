@@ -8,15 +8,13 @@
    User page (username.github.io) → BASE = '/'
 ============================================= */
 
-var CACHE = 'geoquest-v4';
+var CACHE = 'geoquest-v5';
 var BASE  = '/geoquest/';
 
 var ASSETS = [
   BASE,
   BASE + 'index.html',
   BASE + 'manifest.json',
-  BASE + 'icon-192.png',
-  BASE + 'icon-512.png',
   'https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap',
   'https://fonts.gstatic.com/s/nunito/v26/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3j6zbXWjgevT5.woff2'
 ];
