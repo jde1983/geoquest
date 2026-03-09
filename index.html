@@ -919,6 +919,152 @@
   .theme-w4 .card-stub-title { color: var(--w4-text); }
   .theme-w4 .card-stub-sub   { color: var(--w4-text); }
 
+  /* ==============================================
+     QUIZ ENGINE (Phase 4)
+  ============================================== */
+  .quiz-surface {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    padding: 22px 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .theme-w1 .quiz-surface {
+    background: #faf3e0;
+    box-shadow: 0 6px 28px rgba(44,26,16,0.18), 0 2px 6px rgba(44,26,16,0.08);
+  }
+
+  .quiz-label {
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .theme-w1 .quiz-label { color: rgba(44,26,16,0.4); }
+
+  .quiz-q {
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.4;
+    padding-right: 8px;
+  }
+  .theme-w1 .quiz-q { color: var(--w1-ink); }
+
+  .quiz-opts {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-top: 4px;
+  }
+
+  .quiz-opt {
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 700;
+    text-align: left;
+    border-radius: 12px;
+    padding: 13px 16px;
+    cursor: pointer;
+    border: none;
+    transition: background 0.1s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+    line-height: 1.4;
+  }
+  .quiz-opt:active { transform: scale(0.98); }
+
+  .theme-w1 .quiz-opt {
+    background: rgba(44,26,16,0.07);
+    color: var(--w1-ink);
+    border: 1px solid rgba(184,134,11,0.15);
+  }
+  .theme-w1 .quiz-opt.opt-correct {
+    background: rgba(40,140,70,0.15);
+    color: #1a6632;
+    border-color: rgba(40,140,70,0.35);
+  }
+  .theme-w1 .quiz-opt.opt-wrong {
+    background: rgba(200,50,50,0.1);
+    color: #8b1a1a;
+    border-color: rgba(200,50,50,0.2);
+  }
+  .theme-w1 .quiz-opt.opt-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  @keyframes shake {
+    0%   { transform: translateX(0); }
+    15%  { transform: translateX(-8px); }
+    35%  { transform: translateX(7px); }
+    55%  { transform: translateX(-5px); }
+    75%  { transform: translateX(4px); }
+    90%  { transform: translateX(-2px); }
+    100% { transform: translateX(0); }
+  }
+  .quiz-surface.shaking { animation: shake 0.4s ease; }
+
+  .quiz-correct-banner {
+    border-radius: 12px;
+    padding: 13px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5;
+    display: none;
+  }
+  .theme-w1 .quiz-correct-banner {
+    background: rgba(40,140,70,0.12);
+    color: #1a6632;
+    border: 1px solid rgba(40,140,70,0.25);
+  }
+
+  .quiz-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 4px 0;
+    text-align: center;
+  }
+  .qs-seal   { font-size: 48px; line-height: 1; }
+  .qs-title  { font-size: 20px; font-weight: 900; line-height: 1.2; }
+  .qs-score  { font-size: 36px; font-weight: 900; line-height: 1; }
+  .qs-sub    { font-size: 13px; font-weight: 600; line-height: 1.55; opacity: 0.6; max-width: 220px; }
+  .qs-right  { font-size: 13px; font-weight: 700; line-height: 1.7; }
+  .theme-w1 .qs-title { color: var(--w1-ink); }
+  .theme-w1 .qs-score { color: var(--w1-gold); }
+  .theme-w1 .qs-sub   { color: var(--w1-ink); }
+  .theme-w1 .qs-right { color: var(--w1-ink); }
+
+  .done-surface {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    padding: 22px 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+  }
+  .theme-w1 .done-surface {
+    background: #faf3e0;
+    box-shadow: 0 6px 28px rgba(44,26,16,0.18);
+  }
+  .ds-seal  { font-size: 44px; line-height: 1; }
+  .ds-title { font-size: 18px; font-weight: 900; line-height: 1.2; }
+  .ds-score { font-size: 32px; font-weight: 900; }
+  .ds-sub   { font-size: 13px; font-weight: 600; opacity: 0.5; max-width: 200px; line-height: 1.5; }
+  .theme-w1 .ds-title { color: var(--w1-ink); }
+  .theme-w1 .ds-score { color: var(--w1-gold); }
+  .theme-w1 .ds-sub   { color: var(--w1-ink); }
+
   </style>
 </head>
 <body>
@@ -1346,11 +1492,194 @@ var CARDS = {
 };
 
 /* ============================================
-   STATE
-   Saved to localStorage under key 'gq_v1'.
-   Each unit entry: { done: bool, hi: number, perfect: bool }
-   hi = best score percentage (0-100)
+   QUIZ DATA — World 1
+   Each question: { q, opts: [a,b,c,d], ans: index }
 ============================================ */
+var QUIZ = {
+
+  'w1u1': [
+    {
+      q: 'What are the four cardinal directions?',
+      opts: ['North, South, East, West', 'North, South, Up, Down', 'Left, Right, Forward, Back', 'NE, NW, SE, SW'],
+      ans: 0
+    },
+    {
+      q: 'In which direction from Germany is South Africa?',
+      opts: ['North', 'East', 'South', 'West'],
+      ans: 2
+    },
+    {
+      q: 'In which direction from Germany is Australia?',
+      opts: ['North-west', 'South-east', 'North-east', 'South-west'],
+      ans: 1
+    },
+    {
+      q: 'In which direction from India is Uruguay?',
+      opts: ['North-east', 'South-east', 'North-west', 'South-west'],
+      ans: 3
+    },
+    {
+      q: 'Which type of map shows rivers, mountains, and deserts?',
+      opts: ['Political map', 'Road map', 'Physical map', 'Weather map'],
+      ans: 2
+    },
+    {
+      q: 'Which type of map shows country borders and capital cities?',
+      opts: ['Physical map', 'Political map', 'Topographic map', 'Climate map'],
+      ans: 1
+    },
+    {
+      q: 'The equator divides the Earth into which two halves?',
+      opts: ['East and West Hemispheres', 'Northern and Southern Hemispheres', 'Top and Bottom Hemispheres', 'African and European Hemispheres'],
+      ans: 1
+    },
+    {
+      q: 'How many points does a full compass rose have?',
+      opts: ['4', '6', '8', '12'],
+      ans: 2
+    }
+  ],
+
+  'w1u2': [
+    {
+      q: 'Which ocean lies on the west side of Africa?',
+      opts: ['Indian Ocean', 'Pacific Ocean', 'Atlantic Ocean', 'Arctic Ocean'],
+      ans: 2
+    },
+    {
+      q: 'Which ocean lies on the east side of Africa?',
+      opts: ['Atlantic Ocean', 'Indian Ocean', 'Southern Ocean', 'Pacific Ocean'],
+      ans: 1
+    },
+    {
+      q: 'Which sea runs along the north coast of Africa?',
+      opts: ['Red Sea', 'Caribbean Sea', 'Arabian Sea', 'Mediterranean Sea'],
+      ans: 3
+    },
+    {
+      q: 'What are the two capital cities of South Africa tested at Grade 5?',
+      opts: ['Johannesburg and Durban', 'Cape Town and Bloemfontein', 'Pretoria and Cape Town', 'Pretoria and Johannesburg'],
+      ans: 2
+    },
+    {
+      q: 'Which of these African countries is landlocked?',
+      opts: ['South Africa', 'Tanzania', 'Zimbabwe', 'Mozambique'],
+      ans: 2
+    },
+    {
+      q: 'Which of these countries has a coastline?',
+      opts: ['Zimbabwe', 'Chad', 'Botswana', 'Tanzania'],
+      ans: 3
+    },
+    {
+      q: 'What is the capital city of Namibia?',
+      opts: ['Harare', 'Windhoek', 'Lusaka', 'Maputo'],
+      ans: 1
+    },
+    {
+      q: 'What is the capital city of Mozambique?',
+      opts: ['Maputo', 'Dar es Salaam', 'Windhoek', 'Nairobi'],
+      ans: 0
+    },
+    {
+      q: 'Which is the largest country in Africa?',
+      opts: ['Sudan', 'DRC', 'South Africa', 'Algeria'],
+      ans: 3
+    }
+  ],
+
+  'w1u3': [
+    {
+      q: 'Which is the longest river in the world?',
+      opts: ['Congo River', 'Orange River', 'Nile River', 'Limpopo River'],
+      ans: 2
+    },
+    {
+      q: 'Where does the Nile River start?',
+      opts: ['Lake Malawi', 'Lake Victoria', 'Lake Tanganyika', 'Lake Chad'],
+      ans: 1
+    },
+    {
+      q: 'The Nile River flows into which body of water?',
+      opts: ['Atlantic Ocean', 'Indian Ocean', 'Red Sea', 'Mediterranean Sea'],
+      ans: 3
+    },
+    {
+      q: 'Which is the highest point in all of Africa?',
+      opts: ['Thabana Ntlenyana', 'Mount Kenya', 'Mount Kilimanjaro', 'Mount Cameroon'],
+      ans: 2
+    },
+    {
+      q: 'Which is the highest peak in the uKhahlamba-Drakensberg?',
+      opts: ['Mount Kilimanjaro', 'Thabana Ntlenyana', 'Maletsunyane', 'Table Mountain'],
+      ans: 1
+    },
+    {
+      q: 'Where is Thabana Ntlenyana located?',
+      opts: ['South Africa', 'Zimbabwe', 'Lesotho', 'Tanzania'],
+      ans: 2
+    },
+    {
+      q: 'Which is the highest waterfall in southern Africa?',
+      opts: ['Victoria Falls', 'Augrabies Falls', 'Maletsunyane Falls', 'Tugela Falls'],
+      ans: 2
+    },
+    {
+      q: 'Which is the biggest waterfall in the world?',
+      opts: ['Maletsunyane Falls', 'Niagara Falls', 'Augrabies Falls', 'Victoria Falls'],
+      ans: 3
+    },
+    {
+      q: 'The Orange River flows into which ocean?',
+      opts: ['Indian Ocean', 'Atlantic Ocean', 'Southern Ocean', 'Pacific Ocean'],
+      ans: 1
+    },
+    {
+      q: 'The Limpopo River forms the border between South Africa and which country?',
+      opts: ['Namibia', 'Botswana', 'Mozambique', 'Zimbabwe'],
+      ans: 3
+    }
+  ],
+
+  'w1u4': [
+    {
+      q: 'What is subsistence farming?',
+      opts: ['Farming to sell produce at a market', 'Farming just enough food for your own family', 'Farming using modern machines', 'Farming on very large areas of land'],
+      ans: 1
+    },
+    {
+      q: 'What does "rural" mean?',
+      opts: ['Relating to a city', 'Relating to a mine', 'Relating to the countryside', 'Relating to the coast'],
+      ans: 2
+    },
+    {
+      q: 'What does "urban" mean?',
+      opts: ['Relating to the countryside', 'Relating to a city or large town', 'Relating to farming land', 'Relating to a river valley'],
+      ans: 1
+    },
+    {
+      q: 'A photograph showing tall buildings, tarred roads, and large crowds most likely shows a...',
+      opts: ['Village', 'Farm', 'City', 'Forest'],
+      ans: 2
+    },
+    {
+      q: 'A photograph showing simple homes, open land, and people working the soil most likely shows...',
+      opts: ['A city centre', 'A factory', 'Subsistence farming', 'A shopping mall'],
+      ans: 2
+    },
+    {
+      q: 'Which type of map shows capital cities and country borders?',
+      opts: ['Physical map', 'Political map', 'Weather map', 'Road map'],
+      ans: 1
+    },
+    {
+      q: 'What do geographers look for when reading a photograph?',
+      opts: ['The date the photo was taken', 'The name of the photographer', 'Evidence and clues about how people live', 'The colour of the sky'],
+      ans: 2
+    }
+  ]
+
+};
 var KEY = 'gq_v1';
 var state = {};
 
@@ -1440,6 +1769,11 @@ var curUid   = null;
 var curCardIdx  = 0;
 var touchStartX = 0;
 var touchStartY = 0;
+/* quiz state */
+var quizMode    = false;
+var curQIdx     = 0;
+var quizScore   = 0;
+var quizAnswered = false;
 
 function go(view, arg1, arg2) {
   var screens = document.querySelectorAll('.screen');
@@ -1615,8 +1949,33 @@ function rUnit(wid, uid) {
   }
 
   /* World 1 — full card experience */
+  quizMode = false;
   document.getElementById('btn-prev').style.visibility = 'visible';
   document.getElementById('btn-next').style.visibility = 'visible';
+
+  /* If already done, show summary instead of cards */
+  var us = state.units[uid];
+  if (us && us.done) {
+    document.getElementById('card-counter').textContent = 'Already completed';
+    document.getElementById('btn-prev').style.visibility = 'hidden';
+    var btnNext = document.getElementById('btn-next');
+    btnNext.style.visibility = 'visible';
+    btnNext.textContent = '\u2190 Back to World';
+    btnNext.className   = 'card-btn card-btn-done';
+    btnNext.disabled    = false;
+    btnNext.onclick     = function() { go('world', curWid); };
+    var vp = document.getElementById('card-viewport');
+    vp.ontouchstart = null;
+    vp.ontouchend   = null;
+    vp.innerHTML = '<div class="done-surface">'
+      + '<div class="ds-seal">🏅</div>'
+      + '<div class="ds-title">' + res.unit.name + '</div>'
+      + '<div class="ds-score">Best: ' + (us.hi || 0) + '%</div>'
+      + '<div class="ds-sub">Unit complete. Use Start Fresh to reset and try again.</div>'
+      + '</div>';
+    return;
+  }
+
   curCardIdx = 0;
 
   /* Touch / swipe events */
@@ -1671,8 +2030,18 @@ function showCard(idx, direction) {
   btnPrev.disabled = (idx === 0);
 
   if (idx === cards.length - 1) {
-    btnNext.textContent = '\u2190 Back to World';
-    btnNext.className = 'card-btn card-btn-done';
+    var quiz = QUIZ[curUid];
+    var us   = state.units[curUid];
+    if (us && us.done) {
+      btnNext.textContent = '\u2190 Back to World';
+      btnNext.className = 'card-btn card-btn-done';
+    } else if (quiz) {
+      btnNext.textContent = 'Start Quiz \u2192';
+      btnNext.className = 'card-btn card-btn-done';
+    } else {
+      btnNext.textContent = '\u2190 Back to World';
+      btnNext.className = 'card-btn card-btn-done';
+    }
   } else {
     btnNext.textContent = '\u2192';
     btnNext.className = 'card-btn card-btn-next';
@@ -1712,7 +2081,13 @@ function nextCard() {
   var cards = CARDS[curUid];
   if (!cards) return;
   if (curCardIdx >= cards.length - 1) {
-    go('world', curWid);
+    var quiz = QUIZ[curUid];
+    var us   = state.units[curUid];
+    if (quiz && !(us && us.done)) {
+      startQuiz();
+    } else {
+      go('world', curWid);
+    }
     return;
   }
   curCardIdx++;
@@ -1735,6 +2110,163 @@ function toggleGloss(i) {
     if (isOpen) item.classList.remove('open');
     else        item.classList.add('open');
   }
+}
+
+/* ============================================
+   QUIZ ENGINE
+============================================ */
+function startQuiz() {
+  quizMode     = true;
+  curQIdx      = 0;
+  quizScore    = 0;
+  quizAnswered = false;
+  /* Disable swipe during quiz */
+  var vp = document.getElementById('card-viewport');
+  vp.ontouchstart = null;
+  vp.ontouchend   = null;
+  showQuestion(0);
+}
+
+function showQuestion(idx) {
+  var qs      = QUIZ[curUid];
+  var q       = qs[idx];
+  var vp      = document.getElementById('card-viewport');
+  var counter = document.getElementById('card-counter');
+  var btnPrev = document.getElementById('btn-prev');
+  var btnNext = document.getElementById('btn-next');
+
+  counter.textContent = 'Question ' + (idx + 1) + ' of ' + qs.length;
+  btnPrev.style.visibility = 'hidden';
+  btnNext.style.visibility = 'hidden';
+
+  quizAnswered = false;
+
+  var optsHTML = '';
+  for (var i = 0; i < q.opts.length; i++) {
+    optsHTML += '<button class="quiz-opt" onclick="handleAnswer(' + i + ')">' + q.opts[i] + '</button>';
+  }
+
+  var html = '<div class="quiz-surface" id="quiz-surface">'
+    + '<div class="quiz-label">Question ' + (idx + 1) + ' / ' + qs.length + '</div>'
+    + '<div class="quiz-q">' + q.q + '</div>'
+    + '<div class="quiz-opts" id="quiz-opts">' + optsHTML + '</div>'
+    + '<div class="quiz-correct-banner" id="quiz-banner"></div>'
+    + '</div>';
+
+  vp.innerHTML = html;
+}
+
+function handleAnswer(chosen) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+
+  var qs   = QUIZ[curUid];
+  var q    = qs[curQIdx];
+  var surf = document.getElementById('quiz-surface');
+  var opts = document.querySelectorAll('.quiz-opt');
+  var banner = document.getElementById('quiz-banner');
+
+  /* Disable all options */
+  for (var i = 0; i < opts.length; i++) {
+    opts[i].classList.add('opt-disabled');
+  }
+
+  if (chosen === q.ans) {
+    /* Correct */
+    opts[chosen].classList.remove('opt-disabled');
+    opts[chosen].classList.add('opt-correct');
+    quizScore++;
+    setTimeout(function() { advanceQuiz(); }, 900);
+  } else {
+    /* Wrong — shake, show correct */
+    opts[chosen].classList.remove('opt-disabled');
+    opts[chosen].classList.add('opt-wrong');
+    opts[q.ans].classList.remove('opt-disabled');
+    opts[q.ans].classList.add('opt-correct');
+
+    if (surf) {
+      surf.classList.add('shaking');
+      surf.addEventListener('animationend', function() {
+        surf.classList.remove('shaking');
+      }, { once: true });
+    }
+
+    banner.innerHTML = '&#10003; The correct answer is: <strong>' + q.opts[q.ans] + '</strong>';
+    banner.style.display = 'block';
+
+    setTimeout(function() { advanceQuiz(); }, 2000);
+  }
+}
+
+function advanceQuiz() {
+  var qs = QUIZ[curUid];
+  curQIdx++;
+  if (curQIdx >= qs.length) {
+    finishQuiz();
+  } else {
+    showQuestion(curQIdx);
+  }
+}
+
+function finishQuiz() {
+  quizMode = false;
+
+  var qs      = QUIZ[curUid];
+  var total   = qs.length;
+  var pct     = Math.round((quizScore / total) * 100);
+  var perfect = (quizScore === total);
+
+  /* XP */
+  var xpEarned = quizScore * 10;
+  var firstTry = !(state.units[curUid] && state.units[curUid].done);
+  if (perfect) xpEarned += 20;
+  if (perfect && firstTry) xpEarned += 30;
+
+  /* Save state */
+  if (!state.units[curUid]) state.units[curUid] = { done: false, hi: 0, perfect: false };
+  state.units[curUid].done    = true;
+  state.units[curUid].perfect = perfect;
+  state.units[curUid].hi      = Math.max(state.units[curUid].hi || 0, pct);
+  state.xp += xpEarned;
+  saveState();
+  rGQ();
+
+  /* Summary */
+  var seal  = perfect ? '🏅' : (pct >= 70 ? '⭐' : '📜');
+  var title = perfect ? 'Perfect score!' : (pct >= 70 ? 'Well done!' : 'Good effort!');
+  var sub   = 'You earned ' + xpEarned + ' XP.';
+
+  var rightItems = '';
+  var qset = QUIZ[curUid];
+  for (var i = 0; i < qset.length; i++) {
+    rightItems += '<div>' + (i + 1) + '. ' + qset[i].q + '</div>'
+      + '<div style="font-weight:700;margin-bottom:6px;">\u2192 ' + qset[i].opts[qset[i].ans] + '</div>';
+  }
+
+  var html = '<div class="quiz-surface" style="gap:0;">'
+    + '<div class="quiz-summary">'
+    + '<div class="qs-seal">' + seal + '</div>'
+    + '<div class="qs-title">' + title + '</div>'
+    + '<div class="qs-score">' + quizScore + ' / ' + total + '</div>'
+    + '<div class="qs-sub">' + sub + '</div>'
+    + '</div>'
+    + '<div style="margin-top:18px;padding-bottom:4px;">'
+    + '<div class="quiz-label" style="margin-bottom:10px;">All correct answers</div>'
+    + '<div class="qs-right">' + rightItems + '</div>'
+    + '</div>'
+    + '</div>';
+
+  document.getElementById('card-viewport').innerHTML = html;
+  document.getElementById('card-counter').textContent = 'Quiz complete';
+
+  var btnNext = document.getElementById('btn-next');
+  btnNext.style.visibility = 'visible';
+  btnNext.textContent = '\u2190 Back to World';
+  btnNext.className   = 'card-btn card-btn-done';
+  btnNext.disabled    = false;
+  btnNext.onclick     = function() { go('world', curWid); };
+
+  document.getElementById('btn-prev').style.visibility = 'hidden';
 }
 
 /* ============================================
