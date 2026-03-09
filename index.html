@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="GeoQuest">
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet">
@@ -621,7 +621,7 @@
   .unit-screen.theme-w1 .stub-title { color: var(--w1-ink); }
   .unit-screen.theme-w2 .stub-title { color: var(--w2-text); }
   .unit-screen.theme-w3 .stub-title { color: var(--w3-text); }
-  .unit-screen.theme-w4 .stub-title { color: var(--v4-text); }
+  .unit-screen.theme-w4 .stub-title { color: var(--w4-text); }
 
   .stub-sub {
     font-size: 13px;
@@ -1582,6 +1582,31 @@ var QUIZ = {
       ans: 0
     },
     {
+      q: 'What is the capital city of Lesotho?',
+      opts: ['Maseru', 'Mbabane', 'Gaborone', 'Lusaka'],
+      ans: 0
+    },
+    {
+      q: 'What is the capital city of Eswatini?',
+      opts: ['Maputo', 'Mbabane', 'Maseru', 'Harare'],
+      ans: 1
+    },
+    {
+      q: 'In which province is Pretoria?',
+      opts: ['Western Cape', 'KwaZulu-Natal', 'Gauteng', 'Free State'],
+      ans: 2
+    },
+    {
+      q: 'In which province is Cape Town?',
+      opts: ['Western Cape', 'Eastern Cape', 'Gauteng', 'Northern Cape'],
+      ans: 0
+    },
+    {
+      q: 'Which two neighbours of South Africa both have coastlines?',
+      opts: ['Botswana and Zimbabwe', 'Lesotho and Eswatini', 'Namibia and Mozambique', 'Namibia and Botswana'],
+      ans: 2
+    },
+    {
       q: 'Which is the largest country in Africa?',
       opts: ['Sudan', 'DRC', 'South Africa', 'Algeria'],
       ans: 3
@@ -1637,6 +1662,16 @@ var QUIZ = {
     {
       q: 'The Limpopo River forms the border between South Africa and which country?',
       opts: ['Namibia', 'Botswana', 'Mozambique', 'Zimbabwe'],
+      ans: 3
+    },
+    {
+      q: 'Which river crosses the equator twice and flows into the Atlantic Ocean?',
+      opts: ['Nile River', 'Orange River', 'Congo River', 'Zambezi River'],
+      ans: 2
+    },
+    {
+      q: 'Which is the largest lake in Africa?',
+      opts: ['Lake Malawi', 'Lake Chad', 'Lake Tanganyika', 'Lake Victoria'],
       ans: 3
     }
   ],
@@ -1766,6 +1801,7 @@ function getUnit(uid) {
 var curView  = 'home';
 var curWid   = 1;
 var curUid   = null;
+var activeQuizSet = null;
 var curCardIdx  = 0;
 var touchStartX = 0;
 var touchStartY = 0;
@@ -1774,6 +1810,17 @@ var quizMode    = false;
 var curQIdx     = 0;
 var quizScore   = 0;
 var quizAnswered = false;
+
+function shuffleQuizCopy(qs) {
+  var copy = qs.slice();
+  for (var i = copy.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = copy[i];
+    copy[i] = copy[j];
+    copy[j] = tmp;
+  }
+  return copy;
+}
 
 function go(view, arg1, arg2) {
   var screens = document.querySelectorAll('.screen');
@@ -1791,6 +1838,7 @@ function go(view, arg1, arg2) {
   } else if (view === 'unit') {
     curWid = arg1;
     curUid = arg2;
+    activeQuizSet = null;
     rUnit(arg1, arg2);
     document.getElementById('s-unit').classList.add('active');
   }
@@ -2116,6 +2164,10 @@ function toggleGloss(i) {
    QUIZ ENGINE
 ============================================ */
 function startQuiz() {
+  var sourceQuiz = QUIZ[curUid];
+  if (!sourceQuiz || !sourceQuiz.length) return;
+
+  activeQuizSet = shuffleQuizCopy(sourceQuiz);
   quizMode     = true;
   curQIdx      = 0;
   quizScore    = 0;
@@ -2128,7 +2180,7 @@ function startQuiz() {
 }
 
 function showQuestion(idx) {
-  var qs      = QUIZ[curUid];
+  var qs      = activeQuizSet || QUIZ[curUid];
   var q       = qs[idx];
   var vp      = document.getElementById('card-viewport');
   var counter = document.getElementById('card-counter');
@@ -2160,7 +2212,7 @@ function handleAnswer(chosen) {
   if (quizAnswered) return;
   quizAnswered = true;
 
-  var qs   = QUIZ[curUid];
+  var qs   = activeQuizSet || QUIZ[curUid];
   var q    = qs[curQIdx];
   var surf = document.getElementById('quiz-surface');
   var opts = document.querySelectorAll('.quiz-opt');
@@ -2199,7 +2251,7 @@ function handleAnswer(chosen) {
 }
 
 function advanceQuiz() {
-  var qs = QUIZ[curUid];
+  var qs = activeQuizSet || QUIZ[curUid];
   curQIdx++;
   if (curQIdx >= qs.length) {
     finishQuiz();
@@ -2211,7 +2263,7 @@ function advanceQuiz() {
 function finishQuiz() {
   quizMode = false;
 
-  var qs      = QUIZ[curUid];
+  var qs      = activeQuizSet || QUIZ[curUid];
   var total   = qs.length;
   var pct     = Math.round((quizScore / total) * 100);
   var perfect = (quizScore === total);
@@ -2237,7 +2289,7 @@ function finishQuiz() {
   var sub   = 'You earned ' + xpEarned + ' XP.';
 
   var rightItems = '';
-  var qset = QUIZ[curUid];
+  var qset = activeQuizSet || QUIZ[curUid];
   for (var i = 0; i < qset.length; i++) {
     rightItems += '<div>' + (i + 1) + '. ' + qset[i].q + '</div>'
       + '<div style="font-weight:700;margin-bottom:6px;">\u2192 ' + qset[i].opts[qset[i].ans] + '</div>';
@@ -2256,6 +2308,7 @@ function finishQuiz() {
     + '</div>'
     + '</div>';
 
+  activeQuizSet = null;
   document.getElementById('card-viewport').innerHTML = html;
   document.getElementById('card-counter').textContent = 'Quiz complete';
 
