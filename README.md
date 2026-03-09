@@ -60,7 +60,20 @@ Without icons the app still works — the home screen icon will just be a screen
 | 4 — Quiz engine | ✅ Done |
 | 4b — Quiz randomisation + content gap fixes | ✅ Done |
 | 5 — XP + levelling system | ✅ Done |
-| 6 — Interactive maps | ⏳ Next |
-| 7 — Celebrations + Grand Quest complete | ⏳ Pending |
-| 8 — Deploy + test on iPads | ⏳ Pending |
-| 9 — Terms 2–4 content + units | ⏳ Pending |
+| 6 — Adaptive practice + mastery tracking | ✅ Done |
+| 7 — Interactive maps | ⏳ Next |
+| 8 — Celebrations + Grand Quest complete | ⏳ Pending |
+| 9 — Deploy + test on iPads | ⏳ Pending |
+| 10 — Terms 2–4 content + units | ⏳ Pending |
+
+
+---
+
+## Adaptive practice
+
+This build now tracks question-level performance on the device.
+
+- Facts answered correctly twice in a row count as **mastered**
+- Weak facts are pulled into **Practice weak spots** rounds
+- Practice uses a small weighted set instead of the full quiz
+- Progress is stored locally in the browser on that device
