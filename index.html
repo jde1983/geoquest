@@ -633,6 +633,86 @@
   .unit-screen.theme-w1 .stub-sub { color: var(--w1-ink); }
 
   /* ==============================================
+     PHASE 5: XP + LEVELLING VISUALS
+  ============================================== */
+  .level-pill {
+    transition: transform 0.18s ease, box-shadow 0.28s ease, border-color 0.18s ease, background 0.18s ease;
+    transform-origin: center;
+  }
+  .level-pill.lp-celebrate {
+    animation: lpPulse 0.85s ease 2;
+    box-shadow: 0 0 0 1px rgba(201,168,76,0.16), 0 0 24px rgba(201,168,76,0.26);
+    border-color: rgba(201,168,76,0.5);
+    background: rgba(255,255,255,0.08);
+  }
+
+  .xp-readout.xp-bump {
+    animation: xpLift 0.8s ease;
+    color: #e7ca75;
+  }
+
+  .gq-track.gq-celebrate { box-shadow: 0 0 0 1px rgba(201,168,76,0.14); }
+  .gq-fill.gq-celebrate { animation: gqGlow 1.2s ease 2; }
+
+  .levelup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8,6,4,0.74);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 240;
+    padding: 24px;
+  }
+  .levelup-overlay.open { display: flex; }
+
+  .levelup-box {
+    width: 100%;
+    max-width: 320px;
+    border-radius: 24px;
+    padding: 26px 22px 24px;
+    text-align: center;
+    background: linear-gradient(180deg, #231a0e 0%, #17110b 100%);
+    border: 1px solid rgba(201,168,76,0.28);
+    box-shadow: 0 18px 48px rgba(0,0,0,0.35), 0 0 36px rgba(201,168,76,0.12);
+    animation: levelUpRise 0.35s ease;
+  }
+  .levelup-kicker {
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(231,202,117,0.82);
+    margin-bottom: 10px;
+  }
+  .levelup-icon { font-size: 56px; line-height: 1; margin-bottom: 12px; }
+  .levelup-title { font-size: 28px; font-weight: 900; color: #fff3c8; line-height: 1.06; }
+  .levelup-sub { font-size: 13px; font-weight: 700; color: rgba(255,243,200,0.7); line-height: 1.55; margin-top: 10px; }
+
+  @keyframes lpPulse {
+    0%   { transform: scale(1); }
+    32%  { transform: scale(1.08); }
+    58%  { transform: scale(0.98); }
+    100% { transform: scale(1); }
+  }
+  @keyframes xpLift {
+    0%   { transform: translateY(0); opacity: 1; }
+    40%  { transform: translateY(-3px); opacity: 1; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes gqGlow {
+    0%   { box-shadow: 0 0 0 rgba(201,168,76,0); }
+    45%  { box-shadow: 0 0 18px rgba(201,168,76,0.45); }
+    100% { box-shadow: 0 0 0 rgba(201,168,76,0); }
+  }
+  @keyframes levelUpRise {
+    0%   { transform: translateY(10px) scale(0.96); opacity: 0; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
+
+  /* ==============================================
      MODAL: Start Fresh confirmation
   ============================================== */
   .modal-bg {
@@ -1250,6 +1330,15 @@
       <button id="btn-next" class="card-btn card-btn-next" onclick="nextCard()">&#8594;</button>
     </div>
 
+  </div>
+
+  <div id="levelup" class="levelup-overlay">
+    <div class="levelup-box">
+      <div class="levelup-kicker">Level Up</div>
+      <div id="levelup-icon" class="levelup-icon">🗺️</div>
+      <div id="levelup-title" class="levelup-title">Scout</div>
+      <div id="levelup-sub" class="levelup-sub">You reached a new GeoQuest rank.</div>
+    </div>
   </div>
 
   <!-- ============================================
@@ -1919,6 +2008,9 @@ var quizScore   = 0;
 var quizAnswered = false;
 var quizKind    = 'normal';
 var quizWrongIds = [];
+var pendingHomeAnim = null;
+var pendingLevelUp  = null;
+var levelUpTimer    = null;
 
 function qidFor(uid, q) {
   return uid + '::' + q.q;
@@ -2022,6 +2114,78 @@ function shuffleQuizCopy(qs) {
   return copy;
 }
 
+function playHomeAnim() {
+  if (!pendingHomeAnim) return;
+
+  var data = pendingHomeAnim;
+  pendingHomeAnim = null;
+
+  var pill = document.querySelector('.level-pill');
+  var xp = document.getElementById('xp-readout');
+  var fill = document.getElementById('gq0');
+  var track = fill ? fill.parentNode : null;
+  var fromPct = TOTAL > 0 ? Math.round((data.fromDone / TOTAL) * 100) : 0;
+  var toPct = TOTAL > 0 ? Math.round((data.toDone / TOTAL) * 100) : 0;
+
+  if (fill && data.toDone !== data.fromDone) {
+    fill.style.transition = 'none';
+    fill.style.width = fromPct + '%';
+    fill.offsetHeight;
+    setTimeout(function() {
+      fill.style.transition = 'width 0.7s cubic-bezier(0.4,0,0.2,1)';
+      fill.classList.add('gq-celebrate');
+      if (track) track.classList.add('gq-celebrate');
+      fill.style.width = toPct + '%';
+      setTimeout(function() {
+        fill.classList.remove('gq-celebrate');
+        if (track) track.classList.remove('gq-celebrate');
+      }, 1500);
+    }, 40);
+  }
+
+  if (pill && data.xpGain > 0) {
+    pill.classList.remove('lp-celebrate');
+    pill.offsetHeight;
+    pill.classList.add('lp-celebrate');
+    setTimeout(function() { pill.classList.remove('lp-celebrate'); }, 1700);
+  }
+
+  if (xp && data.xpGain > 0) {
+    xp.classList.remove('xp-bump');
+    xp.offsetHeight;
+    xp.classList.add('xp-bump');
+    setTimeout(function() { xp.classList.remove('xp-bump'); }, 900);
+  }
+}
+
+function showLevelUp(data, done) {
+  var wrap = document.getElementById('levelup');
+  if (!wrap || !data) { if (done) done(); return; }
+
+  if (levelUpTimer) clearTimeout(levelUpTimer);
+
+  document.getElementById('levelup-icon').textContent = data.icon;
+  document.getElementById('levelup-title').textContent = data.title;
+  document.getElementById('levelup-sub').textContent = 'You reached level ' + data.level + ' with ' + data.xp + ' XP.';
+  wrap.classList.add('open');
+
+  levelUpTimer = setTimeout(function() {
+    wrap.classList.remove('open');
+    levelUpTimer = null;
+    if (done) done();
+  }, 1600);
+}
+
+function leaveQuizSummary() {
+  var data = pendingLevelUp;
+  pendingLevelUp = null;
+  if (data) {
+    showLevelUp(data, function() { go('world', curWid); });
+  } else {
+    go('world', curWid);
+  }
+}
+
 function go(view, arg1, arg2) {
   var screens = document.querySelectorAll('.screen');
   for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
@@ -2031,6 +2195,7 @@ function go(view, arg1, arg2) {
   if (view === 'home') {
     rHome();
     document.getElementById('s-home').classList.add('active');
+    if (pendingHomeAnim) setTimeout(playHomeAnim, 40);
   } else if (view === 'world') {
     curWid = arg1;
     rWorld(arg1);
@@ -2213,7 +2378,7 @@ function rUnit(wid, uid) {
     btnNext.textContent = '\u2190 Back to World';
     btnNext.className   = 'card-btn card-btn-done';
     btnNext.disabled    = false;
-    btnNext.onclick     = function() { go('world', curWid); };
+    btnNext.onclick     = leaveQuizSummary;
     var vp = document.getElementById('card-viewport');
     vp.ontouchstart = null;
     vp.ontouchend   = null;
@@ -2497,6 +2662,9 @@ function finishQuiz() {
   var pct     = Math.round((quizScore / total) * 100);
   var perfect = (quizScore === total);
   var isPractice = quizKind === 'practice';
+  var prevXp = state.xp;
+  var prevDone = doneCount();
+  var prevLevel = curLevel();
 
   var xpEarned = isPractice ? (quizScore * 4) : (quizScore * 10);
   var firstTry = !(state.units[curUid] && state.units[curUid].done);
@@ -2514,6 +2682,25 @@ function finishQuiz() {
     state.units[curUid].attempts = (state.units[curUid].attempts || 0) + 1;
   }
   state.xp += xpEarned;
+  var newLevel = curLevel();
+  var newDone = doneCount();
+  if (!isPractice) {
+    pendingHomeAnim = {
+      xpGain: xpEarned,
+      fromXp: prevXp,
+      toXp: state.xp,
+      fromDone: prevDone,
+      toDone: newDone
+    };
+    if (newLevel > prevLevel) {
+      pendingLevelUp = {
+        level: newLevel,
+        icon: LEVELS[newLevel].icon,
+        title: LEVELS[newLevel].title,
+        xp: state.xp
+      };
+    }
+  }
   saveState();
   rGQ();
 
@@ -2567,7 +2754,7 @@ function finishQuiz() {
   btnNext.textContent = '← Back to World';
   btnNext.className   = 'card-btn card-btn-done';
   btnNext.disabled    = false;
-  btnNext.onclick     = function() { go('world', curWid); };
+  btnNext.onclick     = leaveQuizSummary;
 
   document.getElementById('btn-prev').style.visibility = 'hidden';
 }
@@ -2583,6 +2770,8 @@ function closeFresh() {
 }
 function doFresh() {
   closeFresh();
+  pendingHomeAnim = null;
+  pendingLevelUp = null;
   state = mkState();
   saveState();
   go('home');

@@ -59,21 +59,26 @@ Without icons the app still works — the home screen icon will just be a screen
 | 3 — Study cards + keyword highlighting | ✅ Done |
 | 4 — Quiz engine | ✅ Done |
 | 4b — Quiz randomisation + content gap fixes | ✅ Done |
-| 5 — XP + levelling system | ✅ Done |
-| 6 — Adaptive practice + mastery tracking | ✅ Done |
-| 7 — Interactive maps | ⏳ Next |
-| 8 — Celebrations + Grand Quest complete | ⏳ Pending |
-| 9 — Deploy + test on iPads | ⏳ Pending |
-| 10 — Terms 2–4 content + units | ⏳ Pending |
+| 5 — XP + levelling visuals | ✅ Done |
+| 6 — Interactive SVG maps | ⏳ Next |
+| 7 — Celebrations + Grand Quest complete | ⏳ Pending |
+| 8 — Deploy + test on iPads | ⏳ Ongoing |
+| 9 — Terms 2–4 content + units | ⏳ Pending |
 
 
 ---
 
-## Adaptive practice
+## Extra support features in this build
 
-This build now tracks question-level performance on the device.
+These are useful additions on top of the original handover roadmap:
 
+- Question-level progress is stored on the device
 - Facts answered correctly twice in a row count as **mastered**
-- Weak facts are pulled into **Practice weak spots** rounds
-- Practice uses a small weighted set instead of the full quiz
-- Progress is stored locally in the browser on that device
+- Weak facts can be pulled into **Practice weak spots** rounds
+- Practice uses a smaller weighted set instead of the full quiz
+
+Phase 5 from the handover is now also implemented:
+
+- Level pill pulses when XP increases
+- Grand Quest bar celebrates on return to Home after finishing a unit
+- Level-up overlay appears before returning to the world screen

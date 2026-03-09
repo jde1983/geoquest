@@ -8,7 +8,7 @@
    User page (username.github.io) → BASE = '/'
 ============================================= */
 
-var CACHE = 'geoquest-v3';
+var CACHE = 'geoquest-v4';
 var BASE  = '/geoquest/';
 
 var ASSETS = [
