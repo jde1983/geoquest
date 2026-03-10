@@ -12,7 +12,7 @@ var PRECACHE = [
   BASE,
   BASE + 'index.html',
   BASE + 'manifest.json',
-  BASE + 'icon.png',
+  BASE + 'icon-192.png',
   'https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap'
 ];
 
