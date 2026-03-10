@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="GeoQuest">
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="/geoquest/icon-192.png">
+  <link rel="apple-touch-icon" href="icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet">
@@ -189,6 +189,54 @@
     font-weight: 600;
     color: var(--muted);
     line-height: 1;
+  }
+
+  /* Level pill pulse animation */
+  @keyframes pillPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(201,168,76,0.55); }
+    50%  { box-shadow: 0 0 0 8px rgba(201,168,76,0); }
+    100% { box-shadow: 0 0 0 0 rgba(201,168,76,0); }
+  }
+  .level-pill.pulse {
+    animation: pillPulse 0.7s ease-out 1;
+  }
+
+  /* Level-up overlay */
+  .levelup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(10,8,6,0.92);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    animation: luFadeIn 0.25s ease-out;
+  }
+  @keyframes luFadeIn {
+    from { opacity: 0; transform: scale(0.94); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .lu-icon  { font-size: 72px; line-height: 1; }
+  .lu-title {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .lu-name  {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--text);
+    text-align: center;
+    padding: 0 24px;
+  }
+  .lu-xp {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
   }
 
   /* World cards grid */
@@ -1876,6 +1924,8 @@ var curUid   = null;
 var curCardIdx  = 0;
 var touchStartX = 0;
 var touchStartY = 0;
+var justCompletedUnit = false;
+var pendingLevelUp    = null;  /* set to new LEVELS entry if level-up occurred */
 /* quiz state */
 var quizMode    = false;
 var curQIdx     = 0;
@@ -1945,7 +1995,13 @@ function rose() {
    RENDER: Home
 ============================================ */
 function rHome() {
-  rGQ();
+  /* Render GQ bar immediately at 0 width, then animate to real value */
+  var ids  = ['gq0','gq1','gq2'];
+  for (var i = 0; i < ids.length; i++) {
+    var f = document.getElementById(ids[i]);
+    if (f) f.style.width = '0%';
+  }
+  setTimeout(rGQ, 80);
 
   var lvl   = curLevel();
   var ldata = LEVELS[lvl];
@@ -1953,6 +2009,17 @@ function rHome() {
   document.getElementById('lp-title').textContent = ldata.title;
   document.getElementById('lp-xp').textContent    = state.xp + ' XP';
   document.getElementById('xp-readout').textContent = state.xp + ' XP earned';
+
+  /* Pulse the level pill if returning after completing a unit */
+  if (justCompletedUnit) {
+    justCompletedUnit = false;
+    var pill = document.querySelector('.level-pill');
+    if (pill) {
+      pill.classList.remove('pulse');
+      void pill.offsetWidth; /* force reflow to restart animation */
+      pill.classList.add('pulse');
+    }
+  }
 
   var html = '';
   for (var wi = 0; wi < WORLDS.length; wi++) {
@@ -2325,6 +2392,29 @@ function advanceQuiz() {
   }
 }
 
+/* ============================================
+   LEVEL-UP OVERLAY
+============================================ */
+function showLevelUp(ldata, cb) {
+  var el = document.createElement('div');
+  el.className = 'levelup-overlay';
+  el.innerHTML =
+    '<div class="lu-icon">' + ldata.icon + '</div>'
+    + '<div class="lu-title">Level Up!</div>'
+    + '<div class="lu-name">' + ldata.title + '</div>'
+    + '<div class="lu-xp">You reached level ' + LEVELS.indexOf(ldata) + '</div>';
+  document.body.appendChild(el);
+  setTimeout(function() {
+    el.style.transition = 'opacity 0.35s';
+    el.style.opacity = '0';
+    setTimeout(function() {
+      if (el.parentNode) el.parentNode.removeChild(el);
+      pendingLevelUp = null;
+      if (cb) cb();
+    }, 350);
+  }, 2500);
+}
+
 function finishQuiz() {
   quizMode = false;
 
@@ -2333,6 +2423,8 @@ function finishQuiz() {
   var perfect = (quizScore === total);
 
   /* XP */
+  var xpBefore = state.xp;
+  var lvlBefore = curLevel();
   var xpEarned = quizScore * 10;
   var firstTry = !(state.units[curUid] && state.units[curUid].done);
   if (perfect) xpEarned += 20;
@@ -2344,6 +2436,11 @@ function finishQuiz() {
   state.units[curUid].perfect = perfect;
   state.units[curUid].hi      = Math.max(state.units[curUid].hi || 0, pct);
   state.xp += xpEarned;
+
+  /* Check for level-up */
+  var lvlAfter = curLevel();
+  justCompletedUnit = true;
+  pendingLevelUp = (lvlAfter > lvlBefore) ? LEVELS[lvlAfter] : null;
   saveState();
   rGQ();
 
@@ -2379,7 +2476,13 @@ function finishQuiz() {
   btnNext.textContent = '\u2190 Back to World';
   btnNext.className   = 'card-btn card-btn-done';
   btnNext.disabled    = false;
-  btnNext.onclick     = function() { go('world', curWid); };
+  btnNext.onclick     = function() {
+    if (pendingLevelUp) {
+      showLevelUp(pendingLevelUp, function() { go('world', curWid); });
+    } else {
+      go('world', curWid);
+    }
+  };
 
   document.getElementById('btn-prev').style.visibility = 'hidden';
 }
