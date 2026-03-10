@@ -5,7 +5,7 @@
    that need to bust the cache.
 ============================================== */
 
-var CACHE_NAME = 'geoquest-v1';
+var CACHE_NAME = 'geoquest-v2';
 var BASE       = '/geoquest/';
 
 var PRECACHE = [
