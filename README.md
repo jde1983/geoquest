@@ -92,6 +92,18 @@ XP, unit completion, best scores, and level are stored in `localStorage` under t
 
 ---
 
+## Grand Quest complete — Mischief Managed
+
+When all four Term 1 units are done, tapping "Back to World" after the final quiz triggers a full-screen parchment celebration:
+
+- A dark curtain folds away (CSS scaleY animation) to reveal parchment
+- 🗺️ seal, "Mischief Managed!" heading, Dumbledore-flavoured praise (with a Snape joke)
+- Total XP earned
+- "Seal the Map 🔴" button to dismiss
+- If a level-up also occurred, the level-up overlay plays after dismissal
+
+---
+
 ## Grand Quest progress
 
 A progress bar at the top of every screen tracks completion across all units in all worlds. Term 1 has 4 units (25% each). Once all four worlds are built it will track across 16 units total.
@@ -139,6 +151,6 @@ On iOS (Safari): tap Share → Add to Home Screen.
 | 4b | Quiz fixes: shuffle + content gaps + wording audit | ✅ Done |
 | 5 | XP + levelling visuals (overlay, bar animation, pill pulse) | ✅ Done |
 | 6 | Visual enhancements (Creative Commons photography) | ⏳ Pending |
-| 7 | Celebrations + Grand Quest complete screen | ⏳ Pending |
+| 7 | Celebrations + Grand Quest complete screen | ✅ Done |
 | 8 | Deploy + test on iPad | ⏳ Ongoing |
 | 9 | Terms 2–4 content + units | ⏳ Pending |
