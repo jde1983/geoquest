@@ -1,7 +1,7 @@
 {
-  "name": "GeoQuest — Grade 5 Geography",
+  "name": "GeoQuest",
   "short_name": "GeoQuest",
-  "description": "Grade 5 Social Sciences Geography study app",
+  "description": "Grade 5 Geography revision app — Platinum CAPS curriculum",
   "start_url": "/geoquest/",
   "scope": "/geoquest/",
   "display": "standalone",
@@ -10,13 +10,13 @@
   "theme_color": "#0f0d0b",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "icon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

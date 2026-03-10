@@ -277,11 +277,11 @@
     top: 50%;
     left: 50%;
     transform: translate(-44%, -58%);
-    width: 96px;
-    height: 96px;
-    opacity: 0.1;
+    font-size: 88px;
+    line-height: 1;
+    opacity: 0.08;
     pointer-events: none;
-    color: var(--w1-ink);
+    user-select: none;
   }
 
   /* World card content */
@@ -350,6 +350,33 @@
   .wc2 .wc-enter { color: var(--w2-text); }
   .wc3 .wc-enter { color: var(--w3-text); }
   .wc4 .wc-enter { color: var(--w4-text); }
+
+  /* Locked world card overlay */
+  .wc-locked {
+    cursor: default;
+    opacity: 0.45;
+    pointer-events: none;
+  }
+  .wc-locked-label {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: rgba(0,0,0,0.38);
+    border-radius: var(--radius);
+  }
+  .wc-locked-icon { font-size: 28px; line-height: 1; }
+  .wc-locked-text {
+    font-size: 11px;
+    font-weight: 800;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 0 12px;
+  }
 
   /* Home bottom strip */
   .home-bottom {
@@ -778,47 +805,6 @@
   .theme-w2 .card-body { color: var(--w2-text); }
   .theme-w3 .card-body { color: var(--w3-text); }
   .theme-w4 .card-body { color: var(--w4-text); }
-
-  .study-visual {
-    margin: 4px 0 16px;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid rgba(184,134,11,0.18);
-    background: linear-gradient(180deg, rgba(244,231,202,0.95), rgba(234,216,180,0.9));
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.55);
-  }
-  .theme-w1 .card-surface.card-hook .study-visual {
-    border-color: rgba(240,224,184,0.18);
-    background: linear-gradient(180deg, rgba(110,61,25,0.95), rgba(82,38,13,0.96));
-  }
-  .study-visual svg {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-  .visual-note {
-    padding: 10px 12px 12px;
-    font-size: 12px;
-    line-height: 1.45;
-    font-weight: 700;
-  }
-  .theme-w1 .visual-note { color: rgba(44,26,16,0.78); }
-  .theme-w1 .card-surface.card-hook .visual-note { color: rgba(240,224,184,0.92); }
-  .svg-hot { cursor: pointer; }
-  .svg-hot circle,
-  .svg-hot rect {
-    transition: transform 0.12s ease, opacity 0.12s ease;
-  }
-  .svg-hot:active circle,
-  .svg-hot:active rect {
-    transform: scale(1.08);
-    opacity: 0.88;
-  }
-  .visual-chip {
-    fill: rgba(255,255,255,0.82);
-    stroke: rgba(44,26,16,0.22);
-    stroke-width: 1;
-  }
 
   /* Keyword highlights */
   .theme-w1 .card-surface mark {
@@ -1308,210 +1294,226 @@ var LEVELS = [
 ============================================ */
 var CARDS = {
 
+  /* --- Unit 1: World Map & Compass Directions --- */
   'w1u1': [
     {
       type: 'info', emoji: '🗺️',
       head: 'Two kinds of maps',
-      body: 'A <mark>political map</mark> shows countries, borders, and capital cities. A <mark>physical map</mark> shows landforms like rivers, mountains, lakes, and deserts. Both maps help us answer different questions.'
+      body: 'Maps come in two main types. A <mark>political map</mark> shows country borders and capital cities. A <mark>physical map</mark> shows rivers, mountains, deserts, and the height of the land. Both types use a key to explain their symbols.'
     },
     {
       type: 'info', emoji: '🧭',
       head: 'The four cardinal directions',
-      body: 'The four main compass directions are <mark>North</mark>, <mark>South</mark>, <mark>East</mark>, and <mark>West</mark>. On most maps, North is at the top. A compass needle points North.'
+      body: 'The four main compass directions are called <mark>cardinal directions</mark>. They are <mark>North</mark>, <mark>South</mark>, <mark>East</mark>, and <mark>West</mark>. On most maps, North points to the top of the page. A compass needle always points North.'
     },
     {
       type: 'info', emoji: '↗️',
       head: 'The eight compass points',
-      body: 'Between the four main directions are <mark>North-East</mark>, <mark>North-West</mark>, <mark>South-East</mark>, and <mark>South-West</mark>. All eight points together make a <mark>compass rose</mark>.'
+      body: 'Between the four cardinal directions are four more points. <mark>North-East (NE)</mark> sits between North and East. <mark>North-West (NW)</mark> sits between North and West. <mark>South-East (SE)</mark> and <mark>South-West (SW)</mark> complete the <mark>compass rose</mark> — all eight points together.'
     },
     {
       type: 'info', emoji: '🌍',
       head: 'Finding direction between countries',
-      body: 'Start at the first country. Then look at the second one. If it is up and right, it is <mark>north-east</mark>. If it is down and left, it is <mark>south-west</mark>.'
+      body: 'Start at the first country. Look at where the second country sits on the map. If it is above and to the right, it is <mark>north-east</mark>. Germany is north-west of South Africa. Australia is south-east of India. Uruguay is south-west of Germany.'
     },
     {
       type: 'info', emoji: '🌐',
       head: 'The equator',
-      body: 'The <mark>equator</mark> is an imaginary line around the middle of Earth. It divides Earth into the <mark>Northern Hemisphere</mark> and the <mark>Southern Hemisphere</mark>. South Africa is south of the equator.'
+      body: 'The <mark>equator</mark> is a line around the middle of the Earth. It divides the Earth into the <mark>Northern Hemisphere</mark> (above) and the <mark>Southern Hemisphere</mark> (below). Countries on the equator get direct, strong sunlight all year. South Africa lies south of the equator.'
     },
     {
       type: 'info', emoji: '📐',
-      head: 'Practice: compass directions',
-      body: 'Use your finger on the map. Move from the first place to the second. Up is north. Down is south. Right is east. Left is west.'
+      head: 'Practice — compass directions',
+      body: 'Put your finger on the first country. Move toward the second. Going up-right? That is <mark>north-east</mark>. Up-left? <mark>North-west</mark>. Down-right? <mark>South-east</mark>. Down-left? <mark>South-west</mark>. Straight up, down, left, or right = one of the four cardinal directions.'
     },
     {
       type: 'hook', emoji: '✨',
-      head: 'Memory spell: compass directions',
-      body: 'Picture a map on a desk. <mark>North</mark> is at the top. <mark>South</mark> is at the bottom. <mark>East</mark> is on the right. <mark>West</mark> is on the left.'
+      head: 'Memory spell — compass directions',
+      body: 'Picture the Marauder\'s Map unrolling on a table. North is the top of the map — Hogwarts, high in the mountains. South is the bottom — the Forbidden Forest. East is right (like turning a page), West is left. The in-betweens — NE, NW, SE, SW — are the secret passages. Eight points. Eight passages. Solemnly swear you\'ve got it.'
     },
     {
       type: 'gloss',
       terms: [
-        { w: 'Political map', d: 'A map that shows borders, countries, and cities.' },
-        { w: 'Physical map', d: 'A map that shows rivers, mountains, lakes, deserts, and height.' },
-        { w: 'Cardinal directions', d: 'The four main compass directions: north, south, east, and west.' },
-        { w: 'Compass rose', d: 'A symbol that shows directions on a map.' },
-        { w: 'Equator', d: 'The imaginary line around the middle of Earth.' },
-        { w: 'Hemisphere', d: 'Half of the Earth.' }
+        { w: 'Cardinal directions', d: 'The four main compass directions: North, South, East, and West.' },
+        { w: 'Compass rose', d: 'A symbol on a map showing all eight compass directions.' },
+        { w: 'Equator', d: 'The line around the middle of the Earth, dividing it into Northern and Southern Hemispheres.' },
+        { w: 'Northern Hemisphere', d: 'The half of the Earth that lies above the equator.' },
+        { w: 'Southern Hemisphere', d: 'The half of the Earth below the equator. South Africa is here.' },
+        { w: 'Political map', d: 'A map showing country borders and capital cities.' },
+        { w: 'Physical map', d: 'A map showing rivers, mountains, deserts, and land height.' }
       ]
-    },
+    }
   ],
 
+  /* --- Unit 2: Africa Our Continent --- */
   'w1u2': [
     {
       type: 'info', emoji: '🌊',
       head: 'The oceans around Africa',
-      body: 'The <mark>Atlantic Ocean</mark> lies to the west of Africa. The <mark>Indian Ocean</mark> lies to the east. The <mark>Mediterranean Sea</mark> is along the north coast.'
+      body: 'Africa has water on all sides. The <mark>Atlantic Ocean</mark> lies to the west. The <mark>Indian Ocean</mark> lies to the east. The <mark>Mediterranean Sea</mark> runs along the north coast of Africa. Knowing which ocean is which side is one of the most tested facts in this unit.'
     },
     {
       type: 'info', emoji: '🌍',
       head: 'Africa on the world map',
-      body: 'Africa is the second-largest continent. It lies across the equator. Some countries are in the north, some in the south, and some cross the equator.'
+      body: 'Africa is the second largest continent on Earth. The <mark>equator</mark> runs through the middle of Africa from west to east. <mark>Algeria</mark> is the largest country in Africa. Five equator countries have coastlines: Gabon, Congo, DRC, Kenya, and Somalia.'
     },
     {
       type: 'info', emoji: '🏙️',
       head: 'Countries and capital cities',
-      body: 'A <mark>capital city</mark> is an important city in a country. Examples are <mark>Windhoek</mark> in Namibia, <mark>Maputo</mark> in Mozambique, <mark>Maseru</mark> in Lesotho, and <mark>Mbabane</mark> in Eswatini.'
+      body: 'Key capital cities to know: <mark>Windhoek</mark> is the capital of Namibia. <mark>Dar es Salaam</mark> is the capital of Tanzania. <mark>Maputo</mark> is the capital of Mozambique. <mark>Nairobi</mark> is the capital of Kenya. <mark>Cairo</mark> is the capital of Egypt.'
     },
     {
       type: 'info', emoji: '🇿🇦',
       head: 'South Africa\'s two capital cities',
-      body: 'At Grade 5 level, South Africa is studied with two capitals: <mark>Pretoria</mark> and <mark>Cape Town</mark>. Pretoria is in <mark>Gauteng</mark>. Cape Town is in the <mark>Western Cape</mark>.'
+      body: 'South Africa has two capital cities. <mark>Pretoria</mark> is in Gauteng — it is the administrative capital, where government departments are based. <mark>Cape Town</mark> is in the Western Cape — it is the legislative capital, where Parliament meets. These are the only two tested at Grade 5.'
     },
     {
-      type: 'info', emoji: '🏝️',
+      type: 'info', emoji: '🔒',
       head: 'Landlocked countries',
-      body: 'A <mark>landlocked</mark> country has no coastline. It is surrounded by land. Zimbabwe, Botswana, and Zambia are examples of landlocked countries.'
+      body: 'A <mark>landlocked</mark> country has no coastline. It is completely surrounded by other countries. <mark>Zimbabwe</mark> and <mark>Chad</mark> are landlocked examples you must know. <mark>South Africa</mark> and <mark>Tanzania</mark> both have coastlines. Botswana, Lesotho, and Eswatini are also landlocked.'
     },
     {
-      type: 'info', emoji: '🧩',
+      type: 'info', emoji: '🗺️',
       head: 'Countries that border South Africa',
-      body: 'South Africa borders Namibia, Botswana, Zimbabwe, Mozambique, Eswatini, and Lesotho. <mark>Namibia</mark> and <mark>Mozambique</mark> are the neighbouring countries with coastlines.'
+      body: 'South Africa shares borders with six countries. Two have coastlines: <mark>Namibia</mark> to the north-west (capital: Windhoek) and <mark>Mozambique</mark> to the north-east (capital: Maputo). The other four — Botswana, Zimbabwe, Lesotho, and Eswatini — are all landlocked.'
     },
     {
-      type: 'info', emoji: '🏜️',
+      type: 'info', emoji: '🌐',
       head: 'Landlocked neighbours of South Africa',
-      body: 'Lesotho and Eswatini are small neighbours linked to South Africa in Grade 5 map work. Their capitals are <mark>Maseru</mark> and <mark>Mbabane</mark>. The <mark>Kalahari Desert</mark> lies mainly in Namibia and Botswana.'
+      body: '<mark>Lesotho</mark> is entirely surrounded by South Africa — its capital is <mark>Maseru</mark>. <mark>Eswatini</mark> is bordered by South Africa and Mozambique — its capital is <mark>Mbabane</mark>. The Congo River flows west into the Atlantic Ocean, crossing the equator twice on its way.'
     },
     {
       type: 'hook', emoji: '✨',
-      head: 'Memory spell: Africa\'s edges',
-      body: 'Think of Africa like a giant shape with water on three sides. <mark>Atlantic</mark> on the left. <mark>Indian</mark> on the right. <mark>Mediterranean</mark> at the top.'
+      head: 'Memory spell — Africa\'s oceans',
+      body: 'Imagine Africa as a shield in the centre of the world map. Its left side faces west — that\'s the Atlantic Ocean, where the sun sets. Its right side faces east — that\'s the Indian Ocean, where the sun rises over Asia. At the very top, the Mediterranean Sea connects Africa to Europe like a moat connecting castles. West = Atlantic. East = Indian. North = Mediterranean. Three sides, three water bodies.'
     },
     {
       type: 'gloss',
       terms: [
-        { w: 'Capital city', d: 'An important city where the government of a country works.' },
-        { w: 'Continent', d: 'One of Earth’s large land masses.' },
-        { w: 'Coastline', d: 'The edge of the land next to the sea or ocean.' },
-        { w: 'Landlocked', d: 'Surrounded by land with no coastline.' },
-        { w: 'Equator', d: 'The line around the middle of Earth.' },
-        { w: 'Neighbouring country', d: 'A country that shares a border with another country.' }
+        { w: 'Landlocked', d: 'A country with no coastline, completely surrounded by other countries.' },
+        { w: 'Coastline', d: 'The border between land and the ocean or sea.' },
+        { w: 'Capital city', d: 'The city where a country\'s government is based.' },
+        { w: 'Atlantic Ocean', d: 'The ocean on the west side of Africa.' },
+        { w: 'Indian Ocean', d: 'The ocean on the east side of Africa.' },
+        { w: 'Mediterranean Sea', d: 'The sea along the north coast of Africa.' },
+        { w: 'Pretoria', d: 'South Africa\'s administrative capital, located in Gauteng.' },
+        { w: 'Cape Town', d: 'South Africa\'s legislative capital, located in the Western Cape.' },
+        { w: 'Windhoek', d: 'Capital city of Namibia.' },
+        { w: 'Maputo', d: 'Capital city of Mozambique.' }
       ]
-    },
+    }
   ],
 
+  /* --- Unit 3: A Physical Map of Africa --- */
   'w1u3': [
     {
       type: 'info', emoji: '🗺️',
       head: 'Physical vs political maps',
-      body: 'A <mark>physical map</mark> shows natural features like rivers, mountains, deserts, and lakes. A <mark>political map</mark> shows borders, countries, and cities.'
+      body: 'A <mark>physical map</mark> uses colour and shading to show what the land looks like — rivers, mountains, deserts, and lakes. A <mark>political map</mark> shows country borders and capital cities. Knowing which type shows which features is a tested skill.'
     },
     {
       type: 'info', emoji: '🏜️',
       head: 'The Sahara Desert',
-      body: 'The <mark>Sahara Desert</mark> is the largest hot desert in the world. It lies in North Africa. Deserts are shown on physical maps because they are natural features.'
-    },
-    {
-      type: 'info', emoji: '🏞️',
-      head: 'The Nile River',
-      body: 'The <mark>Nile River</mark> is the longest river in the world. It starts near <mark>Lake Victoria</mark> and flows north into the <mark>Mediterranean Sea</mark>.'
+      body: 'The <mark>Sahara Desert</mark> is the largest hot, sandy desert in the world. It covers most of northern Africa. Countries including Algeria, Mali, Niger, and Chad contain large parts of the Sahara. Very few plants and animals can survive its extreme heat and lack of water.'
     },
     {
       type: 'info', emoji: '💧',
-      head: 'Lake Victoria and the Congo River',
-      body: '<mark>Lake Victoria</mark> is the largest lake in Africa. The <mark>Congo River</mark> crosses the equator twice and flows into the <mark>Atlantic Ocean</mark>.'
-    },
-    {
-      type: 'info', emoji: '⛰️',
-      head: 'Africa\'s highest mountains',
-      body: '<mark>Mount Kilimanjaro</mark> is the highest mountain in Africa. <mark>Thabana Ntlenyana</mark> is the highest peak in the uKhahlamba-Drakensberg and is in Lesotho.'
+      head: 'The Nile River',
+      body: 'The <mark>Nile River</mark> is the longest river in the world. It starts in <mark>Lake Victoria</mark> and flows north all the way to the <mark>Mediterranean Sea</mark>. The Nile passes through Uganda, Sudan, and Egypt. Ancient civilisations grew up along its banks because of the fertile soil left behind by floods.'
     },
     {
       type: 'info', emoji: '🌊',
-      head: 'Africa\'s great waterfalls',
-      body: '<mark>Victoria Falls</mark> is the biggest waterfall in the world. <mark>Maletsunyane Falls</mark> is the highest waterfall in southern Africa.'
+      head: 'Lake Victoria and the Congo River',
+      body: '<mark>Lake Victoria</mark> is the largest lake in Africa and the starting point of the Nile River. The <mark>Congo River</mark> is a separate river — it winds through the rainforest, crosses the equator twice, and flows west into the <mark>Atlantic Ocean</mark>.'
     },
     {
-      type: 'info', emoji: '🛶',
+      type: 'info', emoji: '🏔️',
+      head: 'Africa\'s highest mountains',
+      body: '<mark>Mount Kilimanjaro</mark> is the highest point in all of Africa at 5 895 m. It is in Tanzania. <mark>Thabana Ntlenyana</mark> is the highest peak in the <mark>uKhahlamba-Drakensberg</mark> mountains at 3 482 m. It sits in Lesotho, not in South Africa.'
+    },
+    {
+      type: 'info', emoji: '💦',
+      head: 'Africa\'s great waterfalls',
+      body: '<mark>Victoria Falls</mark> is the biggest waterfall in the world. It sits on the border between Zimbabwe and Zambia. <mark>Maletsunyane Falls</mark> is the highest waterfall in southern Africa and is located in Lesotho. Both are physical features shown on physical maps.'
+    },
+    {
+      type: 'info', emoji: '🌀',
       head: 'Rivers of southern Africa',
-      body: 'The <mark>Orange River</mark> flows west into the <mark>Atlantic Ocean</mark>. The <mark>Limpopo River</mark> forms part of the border between South Africa and Zimbabwe at Beitbridge.'
+      body: 'The <mark>Orange River</mark> is the longest river in South Africa. It flows west into the <mark>Atlantic Ocean</mark>. The <mark>Limpopo River</mark> forms the border between South Africa and Zimbabwe. <mark>Beitbridge</mark> is the border crossing that spans the Limpopo River.'
     },
     {
       type: 'info', emoji: '⛰️',
       head: 'The uKhahlamba-Drakensberg',
-      body: 'The <mark>uKhahlamba-Drakensberg</mark> is a high mountain range in southern Africa. It forms part of the border between South Africa and Lesotho.'
+      body: 'The <mark>uKhahlamba-Drakensberg</mark> is the major mountain range along South Africa\'s eastern edge. It runs through KwaZulu-Natal and extends into Lesotho. It is a UNESCO World Heritage site famous for ancient San rock art. Its highest peak, Thabana Ntlenyana, is in Lesotho at 3 482 m.'
     },
     {
       type: 'hook', emoji: '✨',
-      head: 'Memory spell: follow the water',
-      body: 'Picture the rivers moving across the map. The <mark>Nile</mark> flows north. The <mark>Congo</mark> bends and crosses the equator twice. The <mark>Orange</mark> moves west to the Atlantic.'
+      head: 'Memory spell — rivers and their destinations',
+      body: 'The trick: the Orange River flows west — same direction as the setting sun — into the Atlantic Ocean on the west coast. The Congo also flows west into the Atlantic. But the Nile goes north — all the way past the pyramids — into the Mediterranean Sea at the top of Africa. Two go west, one goes north. Picture three arrows on the Marauder\'s Map pointing the way out of Africa.'
     },
     {
       type: 'gloss',
       terms: [
-        { w: 'Natural feature', d: 'Something in nature like a river, mountain, desert, or lake.' },
-        { w: 'Desert', d: 'A very dry area that gets little rain.' },
-        { w: 'Source', d: 'The place where a river begins.' },
-        { w: 'Mountain range', d: 'A chain of mountains linked together.' },
-        { w: 'Border', d: 'The line between two countries.' },
-        { w: 'Lake', d: 'A large area of water surrounded by land.' }
+        { w: 'Physical map', d: 'A map showing land features: rivers, mountains, deserts, and lakes.' },
+        { w: 'Sahara Desert', d: 'The largest hot, sandy desert in the world, covering northern Africa.' },
+        { w: 'Nile River', d: 'The longest river in the world. Starts in Lake Victoria, flows north to the Mediterranean Sea.' },
+        { w: 'Lake Victoria', d: 'The largest lake in Africa and the source of the Nile River.' },
+        { w: 'Congo River', d: 'A major river crossing the equator twice, flowing west into the Atlantic Ocean.' },
+        { w: 'Mount Kilimanjaro', d: 'The highest point in Africa at 5 895 m, located in Tanzania.' },
+        { w: 'Thabana Ntlenyana', d: 'The highest peak in the uKhahlamba-Drakensberg at 3 482 m, located in Lesotho.' },
+        { w: 'uKhahlamba-Drakensberg', d: 'The major mountain range along South Africa\'s eastern edge, extending into Lesotho.' },
+        { w: 'Victoria Falls', d: 'The biggest waterfall in the world, on the border of Zimbabwe and Zambia.' },
+        { w: 'Maletsunyane Falls', d: 'The highest waterfall in southern Africa, located in Lesotho.' },
+        { w: 'Orange River', d: 'The longest river in South Africa, flowing west into the Atlantic Ocean.' },
+        { w: 'Limpopo River', d: 'The river forming the border between South Africa and Zimbabwe. Beitbridge crosses it.' },
+        { w: 'Beitbridge', d: 'The border crossing over the Limpopo River between South Africa and Zimbabwe.' }
       ]
-    },
+    }
   ],
 
+  /* --- Unit 4: Images of Africa --- */
   'w1u4': [
     {
       type: 'info', emoji: '📷',
       head: 'Using photographs as sources',
-      body: 'Photographs are useful sources in Geography. They show what a place looks like. We can use them to notice land, buildings, roads, plants, water, and people.'
+      body: 'A <mark>photograph</mark> is a source that shows how places look and how people live. Geographers read photographs the same way historians read documents — they look for evidence and clues. Africa contains ancient villages, modern cities, farmland, and wilderness, sometimes in the same country.'
     },
     {
       type: 'info', emoji: '🏘️',
       head: 'Villages in Africa',
-      body: 'A village is usually smaller than a town or city. Villages often have fewer buildings, more open land, and homes spread farther apart.'
+      body: 'A <mark>village</mark> is a small community in a <mark>rural</mark> area. Villages often have traditional housing built from local materials. People may grow their own food or keep animals nearby. Villages have fewer services than cities — fewer schools, hospitals, and shops.'
     },
     {
       type: 'info', emoji: '🏙️',
       head: 'Cities in Africa',
-      body: 'A city usually has many buildings, busy roads, and lots of people. Cities often have shops, offices, factories, and transport routes.'
+      body: 'A <mark>city</mark> is a large settlement with many people, buildings, and services. Cities have tarred roads, tall buildings, busy markets, and many residents. African cities like Cairo, Lagos, Nairobi, and Cape Town are among the largest in the world. City areas are called <mark>urban</mark> areas.'
     },
     {
-      type: 'info', emoji: '🌱',
+      type: 'info', emoji: '🌾',
       head: 'Subsistence farming',
-      body: '<mark>Subsistence farming</mark> means growing food mainly for your own family to eat. It is usually done on a small piece of land.'
+      body: '<mark>Subsistence farming</mark> is when a family grows or raises just enough food for themselves. They do not usually sell their produce — it all goes to feeding the household. Subsistence farmers depend on rainfall and use simple tools. This type of farming is common in rural parts of Africa.'
     },
     {
-      type: 'info', emoji: '🔎',
-      head: 'Reading photographs: what to look for',
-      body: 'Look for clues. Ask: Is it rural or urban? Are there roads, fields, animals, rivers, or tall buildings? Good geographers look closely before they answer.'
+      type: 'info', emoji: '👁️',
+      head: 'Reading photographs — what to look for',
+      body: 'When reading a photograph, ask: is this <mark>urban</mark> or <mark>rural</mark>? Clues for a city: concrete buildings, tarred roads, crowds. Clues for a village: simple structures, open land, animals nearby. Clues for subsistence farming: people working the soil with basic tools, crops growing close to a simple home.'
     },
     {
       type: 'hook', emoji: '✨',
-      head: 'Memory spell: village, city, farm',
-      body: 'Picture three frames. A <mark>village</mark> has open space and scattered homes. A <mark>city</mark> has many buildings and roads. A <mark>farm</mark> has fields, soil, crops, or animals.'
+      head: 'Memory spell — village, city, farm',
+      body: 'Think of it like the wizarding world. A city is Diagon Alley — packed, loud, tall buildings, everything for sale. A village is Godric\'s Hollow — quiet, small, everyone knows everyone. Subsistence farming? That\'s the Weasleys\' garden — just enough food for the family, grown with hard work (and a bit of magic). One photograph, one question: which one are you looking at?'
     },
     {
       type: 'gloss',
       terms: [
-        { w: 'Source', d: 'Something that gives us information.' },
-        { w: 'Village', d: 'A small settlement with fewer buildings than a town or city.' },
-        { w: 'City', d: 'A large settlement with many buildings and roads.' },
-        { w: 'Subsistence farming', d: 'Growing food mainly for your own family.' },
-        { w: 'Rural', d: 'Relating to the countryside.' },
-        { w: 'Urban', d: 'Relating to a city or town.' }
+        { w: 'Photograph as source', d: 'A photograph used as evidence to understand how places look or how people live.' },
+        { w: 'Village', d: 'A small community in a rural area, usually with traditional housing.' },
+        { w: 'City', d: 'A large urban settlement with many people, buildings, and services.' },
+        { w: 'Urban', d: 'Relating to a city or large town.' },
+        { w: 'Rural', d: 'Relating to the countryside or areas outside cities and towns.' },
+        { w: 'Subsistence farming', d: 'Farming that produces just enough food for the family\'s own use, not for selling.' }
       ]
-    },
+    }
   ]
 
 };
@@ -1529,70 +1531,90 @@ var QUIZ = {
       ans: 0
     },
     {
-      q: 'Which direction from Germany is South Africa?',
+      q: 'In which direction from Germany is South Africa?',
       opts: ['North', 'East', 'South', 'West'],
       ans: 2
     },
     {
-      q: 'Which direction from Germany is Australia?',
+      q: 'In which direction from Germany is Australia?',
       opts: ['North-west', 'South-east', 'North-east', 'South-west'],
       ans: 1
     },
     {
-      q: 'Which direction from India is Uruguay?',
+      q: 'In which direction from India is Uruguay?',
       opts: ['North-east', 'South-east', 'North-west', 'South-west'],
       ans: 3
     },
     {
-      q: 'Which map shows rivers, mountains, and deserts?',
+      q: 'In which direction from India is Germany?',
+      opts: ['South-west', 'South-east', 'North-west', 'North-east'],
+      ans: 2
+    },
+    {
+      q: 'Which type of map shows rivers, mountains, and deserts?',
       opts: ['Political map', 'Road map', 'Physical map', 'Weather map'],
       ans: 2
     },
     {
-      q: 'Which map shows country borders and capital cities?',
-      opts: ['Physical map', 'Political map', 'Weather map', 'Climate map'],
+      q: 'Which type of map shows country borders and capital cities?',
+      opts: ['Physical map', 'Political map', 'Topographic map', 'Climate map'],
       ans: 1
     },
     {
-      q: 'The equator divides Earth into which two halves?',
-      opts: ['East and West', 'Northern and Southern', 'Top and Bottom', 'Africa and Europe'],
+      q: 'The equator divides the Earth into which two halves?',
+      opts: ['Eastern and Western Hemispheres', 'Northern and Southern Hemispheres', 'Polar and Tropical Hemispheres', 'Summer and Winter Hemispheres'],
       ans: 1
     },
     {
-      q: 'How many points are on a full compass rose?',
+      q: 'How many points does a full compass rose have?',
       opts: ['4', '6', '8', '12'],
       ans: 2
     },
+    {
+      q: 'South Africa lies in which hemisphere?',
+      opts: ['Northern Hemisphere', 'Eastern Hemisphere', 'Southern Hemisphere', 'Western Hemisphere'],
+      ans: 2
+    }
   ],
 
   'w1u2': [
     {
-      q: 'Which ocean is west of Africa?',
+      q: 'Which ocean lies on the west side of Africa?',
       opts: ['Indian Ocean', 'Pacific Ocean', 'Atlantic Ocean', 'Arctic Ocean'],
       ans: 2
     },
     {
-      q: 'Which ocean is east of Africa?',
+      q: 'Which ocean lies on the east side of Africa?',
       opts: ['Atlantic Ocean', 'Indian Ocean', 'Southern Ocean', 'Pacific Ocean'],
       ans: 1
     },
     {
-      q: 'Which sea is along the north coast of Africa?',
+      q: 'Which sea runs along the north coast of Africa?',
       opts: ['Red Sea', 'Caribbean Sea', 'Arabian Sea', 'Mediterranean Sea'],
       ans: 3
     },
     {
-      q: 'Which two capitals of South Africa are studied in Grade 5?',
+      q: 'South Africa has two capital cities. What are they?',
       opts: ['Johannesburg and Durban', 'Cape Town and Bloemfontein', 'Pretoria and Cape Town', 'Pretoria and Johannesburg'],
       ans: 2
     },
     {
-      q: 'Which country is landlocked?',
+      q: 'Pretoria is in which province?',
+      opts: ['Western Cape', 'KwaZulu-Natal', 'Gauteng', 'Limpopo'],
+      ans: 2
+    },
+    {
+      q: 'Cape Town is in which province?',
+      opts: ['Eastern Cape', 'Western Cape', 'Northern Cape', 'Gauteng'],
+      ans: 1
+    },
+    {
+      q: 'Which of these African countries is landlocked?',
       opts: ['South Africa', 'Tanzania', 'Zimbabwe', 'Mozambique'],
       ans: 2
     },
     {
-      q: 'Which country has a coastline?',
+      q: 'Which of these countries has a coastline?',
       opts: ['Zimbabwe', 'Chad', 'Botswana', 'Tanzania'],
       ans: 3
     },
@@ -1607,40 +1629,25 @@ var QUIZ = {
       ans: 0
     },
     {
-      q: 'What is the capital city of Lesotho?',
-      opts: ['Maseru', 'Mbabane', 'Gaborone', 'Lusaka'],
-      ans: 0
-    },
-    {
-      q: 'What is the capital city of Eswatini?',
-      opts: ['Maputo', 'Mbabane', 'Maseru', 'Harare'],
-      ans: 1
-    },
-    {
-      q: 'Which province is Pretoria in?',
-      opts: ['Western Cape', 'KwaZulu-Natal', 'Gauteng', 'Free State'],
-      ans: 2
-    },
-    {
-      q: 'Which province is Cape Town in?',
-      opts: ['Western Cape', 'Eastern Cape', 'Gauteng', 'Northern Cape'],
-      ans: 0
-    },
-    {
-      q: 'Which two neighbours of South Africa both have coastlines?',
-      opts: ['Botswana and Zimbabwe', 'Lesotho and Eswatini', 'Namibia and Mozambique', 'Namibia and Botswana'],
-      ans: 2
-    },
-    {
       q: 'Which is the largest country in Africa?',
       opts: ['Sudan', 'DRC', 'South Africa', 'Algeria'],
       ans: 3
     },
     {
-      q: 'Where is most of the Kalahari Desert?',
-      opts: ['Namibia and Botswana', 'Kenya and Uganda', 'South Africa and Lesotho', 'Egypt and Libya'],
+      q: 'What is the capital city of Lesotho?',
+      opts: ['Maseru', 'Mbabane', 'Gaborone', 'Harare'],
       ans: 0
     },
+    {
+      q: 'What is the capital city of Eswatini?',
+      opts: ['Maseru', 'Mbabane', 'Maputo', 'Windhoek'],
+      ans: 1
+    },
+    {
+      q: 'Which two countries bordering South Africa have coastlines?',
+      opts: ['Botswana and Zimbabwe', 'Lesotho and Eswatini', 'Namibia and Mozambique', 'Zimbabwe and Namibia'],
+      ans: 2
+    }
   ],
 
   'w1u3': [
@@ -1655,14 +1662,34 @@ var QUIZ = {
       ans: 1
     },
     {
-      q: 'The Nile River flows into which sea?',
+      q: 'The Nile River flows into which body of water?',
       opts: ['Atlantic Ocean', 'Indian Ocean', 'Red Sea', 'Mediterranean Sea'],
       ans: 3
     },
     {
-      q: 'Which is the highest mountain in Africa?',
+      q: 'Which is the largest lake in Africa?',
+      opts: ['Lake Malawi', 'Lake Tanganyika', 'Lake Victoria', 'Lake Chad'],
+      ans: 2
+    },
+    {
+      q: 'The Congo River flows into which ocean?',
+      opts: ['Indian Ocean', 'Atlantic Ocean', 'Southern Ocean', 'Mediterranean Sea'],
+      ans: 1
+    },
+    {
+      q: 'How many times does the Congo River cross the equator?',
+      opts: ['Once', 'Twice', 'Three times', 'It does not cross the equator'],
+      ans: 1
+    },
+    {
+      q: 'Which is the highest point in all of Africa?',
       opts: ['Thabana Ntlenyana', 'Mount Kenya', 'Mount Kilimanjaro', 'Mount Cameroon'],
       ans: 2
+    },
+    {
+      q: 'In which country is Mount Kilimanjaro?',
+      opts: ['Kenya', 'Lesotho', 'South Africa', 'Tanzania'],
+      ans: 3
     },
     {
       q: 'Which is the highest peak in the uKhahlamba-Drakensberg?',
@@ -1670,7 +1697,7 @@ var QUIZ = {
       ans: 1
     },
     {
-      q: 'Where is Thabana Ntlenyana?',
+      q: 'Where is Thabana Ntlenyana located?',
       opts: ['South Africa', 'Zimbabwe', 'Lesotho', 'Tanzania'],
       ans: 2
     },
@@ -1690,59 +1717,74 @@ var QUIZ = {
       ans: 1
     },
     {
-      q: 'The Limpopo River forms part of the border between South Africa and which country?',
+      q: 'The Limpopo River forms the border between South Africa and which country?',
       opts: ['Namibia', 'Botswana', 'Mozambique', 'Zimbabwe'],
       ans: 3
     },
     {
-      q: 'Which river crosses the equator twice and flows into the Atlantic Ocean?',
-      opts: ['Nile River', 'Orange River', 'Congo River', 'Zambezi River'],
+      q: 'The Kalahari Desert lies in Namibia and which other country?',
+      opts: ['Zimbabwe', 'Botswana', 'Lesotho', 'Mozambique'],
+      ans: 1
+    },
+    {
+      q: 'Which is the longest river in South Africa?',
+      opts: ['Limpopo River', 'Vaal River', 'Orange River', 'Tugela River'],
       ans: 2
     },
     {
-      q: 'Which is the largest lake in Africa?',
-      opts: ['Lake Malawi', 'Lake Chad', 'Lake Tanganyika', 'Lake Victoria'],
-      ans: 3
-    },
+      q: 'Beitbridge is a famous border crossing. Which river does it cross?',
+      opts: ['Orange River', 'Congo River', 'Limpopo River', 'Vaal River'],
+      ans: 2
+    }
   ],
 
   'w1u4': [
     {
       q: 'What is subsistence farming?',
-      opts: ['Farming to sell food at a market', 'Farming to grow enough food for your own family', 'Farming with large machines', 'Farming on huge pieces of land'],
+      opts: ['Farming to sell produce at a market', 'Farming just enough food for your own family', 'Farming using modern machines', 'Farming on very large areas of land'],
       ans: 1
     },
     {
-      q: 'What does rural mean?',
-      opts: ['Related to a city', 'Related to a mine', 'Related to the countryside', 'Related to the coast'],
+      q: 'What does "rural" mean?',
+      opts: ['Relating to a city', 'Relating to a mine', 'Relating to the countryside', 'Relating to the coast'],
       ans: 2
     },
     {
-      q: 'What does urban mean?',
-      opts: ['Related to the countryside', 'Related to a city or large town', 'Related to farming land', 'Related to a river valley'],
+      q: 'What does "urban" mean?',
+      opts: ['Relating to the countryside', 'Relating to a city or large town', 'Relating to farming land', 'Relating to a river valley'],
       ans: 1
     },
     {
-      q: 'A photo with tall buildings, tarred roads, and many people most likely shows a...',
+      q: 'A photograph showing tall buildings, tarred roads, and large crowds most likely shows a...',
       opts: ['Village', 'Farm', 'City', 'Forest'],
       ans: 2
     },
     {
-      q: 'A photo with simple homes, open land, and people working the soil most likely shows...',
+      q: 'A photograph showing simple homes, open land, and people working the soil most likely shows...',
       opts: ['A city centre', 'A factory', 'Subsistence farming', 'A shopping mall'],
       ans: 2
     },
     {
-      q: 'Which map shows capital cities and country borders?',
-      opts: ['Physical map', 'Political map', 'Weather map', 'Road map'],
-      ans: 1
-    },
-    {
-      q: 'What do geographers look for when reading a photograph?',
-      opts: ['The date it was taken', 'The photographer’s name', 'Clues about how people live', 'The colour of the sky'],
+      q: 'A photograph shows simple mud-brick homes, people working fields by hand, and animals nearby. This is most likely...',
+      opts: ['A city centre', 'A shopping district', 'A rural village or subsistence farm', 'A mine'],
       ans: 2
     },
-  ],
+    {
+      q: 'What is the difference between a village and a city?',
+      opts: ['A village has more buildings than a city', 'A city is in the countryside and a village is near the sea', 'A village is small and rural; a city is large with many services', 'There is no difference'],
+      ans: 2
+    },
+    {
+      q: 'Which of these is a clue that a photograph shows a city?',
+      opts: ['Simple mud-brick homes', 'People working in fields with hand tools', 'Tall concrete buildings and tarred roads', 'Animals grazing near small homes'],
+      ans: 2
+    },
+    {
+      q: 'A village is best described as...',
+      opts: ['A large settlement with tall buildings', 'A small community in a rural area', 'An area of heavy industry', 'A cluster of government offices'],
+      ans: 1
+    }
+  ]
 
 };
 var KEY = 'gq_v1';
@@ -1839,6 +1881,16 @@ var quizMode    = false;
 var curQIdx     = 0;
 var quizScore   = 0;
 var quizAnswered = false;
+var quizDeck    = [];
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
 
 function go(view, arg1, arg2) {
   var screens = document.querySelectorAll('.screen');
@@ -1884,431 +1936,10 @@ function rGQ() {
   }
 }
 
-/* Compass rose SVG (decorative, World 1 card only) */
+/* Compass rose watermark (World 1 card — emoji, no SVG) */
 function rose() {
-  return '<svg class="compass-watermark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">'
-    + '<circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="1.2"/>'
-    + '<circle cx="50" cy="50" r="4.5" fill="currentColor"/>'
-    + '<polygon points="50,7 46.5,49 53.5,49" fill="currentColor"/>'
-    + '<polygon points="50,93 46.5,51 53.5,51" fill="currentColor" opacity="0.45"/>'
-    + '<polygon points="93,50 51,46.5 51,53.5" fill="currentColor" opacity="0.45"/>'
-    + '<polygon points="7,50 49,46.5 49,53.5" fill="currentColor" opacity="0.45"/>'
-    + '<text x="50" y="19" text-anchor="middle" font-size="11" font-weight="900" font-family="Nunito,sans-serif" fill="currentColor">N</text>'
-    + '<text x="50" y="89" text-anchor="middle" font-size="9"  font-family="Nunito,sans-serif" fill="currentColor" opacity="0.45">S</text>'
-    + '<text x="86" y="55" text-anchor="middle" font-size="9"  font-family="Nunito,sans-serif" fill="currentColor" opacity="0.45">E</text>'
-    + '<text x="14" y="55" text-anchor="middle" font-size="9"  font-family="Nunito,sans-serif" fill="currentColor" opacity="0.45">W</text>'
-    + '</svg>';
+  return '<div class="compass-watermark">🧭</div>';
 }
-
-
-function setVisualNote(text) {
-  var el = document.getElementById('visual-note');
-  if (el) el.innerHTML = text;
-}
-
-function visualWrap(svg, note) {
-  return '<div class="study-visual">' + svg + '<div id="visual-note" class="visual-note">' + note + '</div></div>';
-}
-
-function mapSpot(cx, cy, label, note, fill) {
-  return '<g class="svg-hot" onclick="setVisualNote(\'' + note + '\')">'
-    + '<circle cx="' + cx + '" cy="' + cy + '" r="12" fill="' + (fill || '#b8860b') + '" opacity="0.95"></circle>'
-    + '<text x="' + cx + '" y="' + (cy + 4) + '" text-anchor="middle" font-size="11" font-weight="900" font-family="Nunito,sans-serif" fill="#fff">' + label + '</text>'
-    + '</g>';
-}
-
-function svgCompassBasic() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#f7edd2"/>'
-    + '<circle cx="160" cy="90" r="56" fill="none" stroke="#7a5b2b" stroke-width="2"/>'
-    + '<circle cx="160" cy="90" r="8" fill="#7a5b2b"/>'
-    + '<polygon points="160,20 150,82 170,82" fill="#8b1a1a"/>'
-    + '<polygon points="160,160 150,98 170,98" fill="#7a5b2b" opacity="0.45"/>'
-    + '<polygon points="230,90 168,80 168,100" fill="#7a5b2b" opacity="0.45"/>'
-    + '<polygon points="90,90 152,80 152,100" fill="#7a5b2b" opacity="0.45"/>'
-    + '<text x="160" y="38" text-anchor="middle" font-size="18" font-weight="900" font-family="Nunito,sans-serif" fill="#8b1a1a">N</text>'
-    + '<text x="160" y="154" text-anchor="middle" font-size="16" font-weight="900" font-family="Nunito,sans-serif" fill="#7a5b2b">S</text>'
-    + '<text x="228" y="96" text-anchor="middle" font-size="16" font-weight="900" font-family="Nunito,sans-serif" fill="#7a5b2b">E</text>'
-    + '<text x="92" y="96" text-anchor="middle" font-size="16" font-weight="900" font-family="Nunito,sans-serif" fill="#7a5b2b">W</text>'
-    + '<rect x="26" y="22" width="84" height="30" rx="12" class="visual-chip"/>'
-    + '<text x="68" y="42" text-anchor="middle" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#2c1a10">Map helper</text>'
-    + '</svg>';
-}
-
-function svgCompassEight() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#f7edd2"/>'
-    + '<circle cx="160" cy="92" r="58" fill="none" stroke="#7a5b2b" stroke-width="2"/>'
-    + '<circle cx="160" cy="92" r="8" fill="#7a5b2b"/>'
-    + '<polygon points="160,26 151,84 169,84" fill="#8b1a1a"/>'
-    + '<polygon points="160,158 151,100 169,100" fill="#7a5b2b" opacity="0.45"/>'
-    + '<polygon points="226,92 168,83 168,101" fill="#7a5b2b" opacity="0.45"/>'
-    + '<polygon points="94,92 152,83 152,101" fill="#7a5b2b" opacity="0.45"/>'
-    + '<polygon points="207,45 170,82 178,90" fill="#b8860b"/>'
-    + '<polygon points="113,45 150,82 142,90" fill="#b8860b"/>'
-    + '<polygon points="207,139 170,102 178,94" fill="#b8860b"/>'
-    + '<polygon points="113,139 150,102 142,94" fill="#b8860b"/>'
-    + '<text x="160" y="23" text-anchor="middle" font-size="15" font-weight="900" font-family="Nunito,sans-serif" fill="#8b1a1a">N</text>'
-    + '<text x="208" y="42" text-anchor="middle" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#7a5b2b">NE</text>'
-    + '<text x="112" y="42" text-anchor="middle" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#7a5b2b">NW</text>'
-    + '<text x="234" y="96" text-anchor="middle" font-size="15" font-weight="900" font-family="Nunito,sans-serif" fill="#7a5b2b">E</text>'
-    + '<text x="86" y="96" text-anchor="middle" font-size="15" font-weight="900" font-family="Nunito,sans-serif" fill="#7a5b2b">W</text>'
-    + '<text x="208" y="152" text-anchor="middle" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#7a5b2b">SE</text>'
-    + '<text x="112" y="152" text-anchor="middle" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#7a5b2b">SW</text>'
-    + '<text x="160" y="168" text-anchor="middle" font-size="15" font-weight="900" font-family="Nunito,sans-serif" fill="#7a5b2b">S</text>'
-    + '</svg>';
-}
-
-function svgCountryDirection() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#f7edd2"/>'
-    + '<circle cx="90" cy="86" r="24" fill="#d7c098"/>'
-    + '<text x="90" y="90" text-anchor="middle" font-size="11" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">Start</text>'
-    + '<circle cx="226" cy="52" r="24" fill="#b8860b" opacity="0.86"/>'
-    + '<text x="226" y="56" text-anchor="middle" font-size="11" font-weight="900" font-family="Nunito,sans-serif" fill="#fff">NE</text>'
-    + '<circle cx="226" cy="126" r="24" fill="#8b1a1a" opacity="0.86"/>'
-    + '<text x="226" y="130" text-anchor="middle" font-size="11" font-weight="900" font-family="Nunito,sans-serif" fill="#fff">SE</text>'
-    + '<circle cx="156" cy="126" r="24" fill="#7a5b2b" opacity="0.72"/>'
-    + '<text x="156" y="130" text-anchor="middle" font-size="11" font-weight="900" font-family="Nunito,sans-serif" fill="#fff">S</text>'
-    + '<path d="M113 82 L195 61" stroke="#2c1a10" stroke-width="4" stroke-linecap="round"/>'
-    + '<polygon points="194,54 210,58 198,68" fill="#2c1a10"/>'
-    + '<path d="M113 90 L193 119" stroke="#2c1a10" stroke-width="4" stroke-linecap="round" opacity="0.45"/>'
-    + '<polygon points="191,112 206,122 190,126" fill="#2c1a10" opacity="0.45"/>'
-    + '</svg>';
-}
-
-function svgEquator() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#f7edd2"/>'
-    + '<circle cx="160" cy="90" r="62" fill="#7da9d8" opacity="0.25" stroke="#5b7ea8" stroke-width="2"/>'
-    + '<ellipse cx="160" cy="90" rx="62" ry="22" fill="none" stroke="#8b1a1a" stroke-width="4"/>'
-    + '<path d="M132 74 C126 60 108 58 100 72 C94 86 108 102 122 99 C139 95 142 82 132 74" fill="#8cb46b"/>'
-    + '<path d="M198 84 C202 66 228 61 240 75 C250 87 246 109 226 112 C208 114 194 102 198 84" fill="#8cb46b"/>'
-    + '<path d="M152 104 C144 94 132 98 128 110 C125 121 132 131 144 132 C157 133 164 117 152 104" fill="#8cb46b"/>'
-    + '<text x="160" y="84" text-anchor="middle" font-size="13" font-weight="900" font-family="Nunito,sans-serif" fill="#8b1a1a">Equator</text>'
-    + '<text x="160" y="34" text-anchor="middle" font-size="13" font-weight="800" font-family="Nunito,sans-serif" fill="#2c1a10">Northern Hemisphere</text>'
-    + '<text x="160" y="154" text-anchor="middle" font-size="13" font-weight="800" font-family="Nunito,sans-serif" fill="#2c1a10">Southern Hemisphere</text>'
-    + '</svg>';
-}
-
-function svgDeskMemory() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#64310d"/>'
-    + '<rect x="28" y="26" width="264" height="128" rx="18" fill="#ead3a7" stroke="#d4b16a" stroke-width="4"/>'
-    + '<line x1="160" y1="44" x2="160" y2="136" stroke="#8b1a1a" stroke-width="4"/>'
-    + '<line x1="64" y1="90" x2="256" y2="90" stroke="#8b1a1a" stroke-width="4"/>'
-    + '<text x="160" y="58" text-anchor="middle" font-size="18" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">N</text>'
-    + '<text x="160" y="127" text-anchor="middle" font-size="18" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">S</text>'
-    + '<text x="238" y="96" text-anchor="middle" font-size="18" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">E</text>'
-    + '<text x="82" y="96" text-anchor="middle" font-size="18" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">W</text>'
-    + '</svg>';
-}
-
-function svgGlossary(kind) {
-  return '<svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="160" rx="18" fill="' + (kind === 'hook' ? '#64310d' : '#f7edd2') + '"/>'
-    + '<rect x="54" y="34" width="56" height="90" rx="8" fill="#b8860b"/>'
-    + '<rect x="114" y="24" width="48" height="100" rx="8" fill="#8b1a1a"/>'
-    + '<rect x="168" y="40" width="42" height="84" rx="8" fill="#7a5b2b"/>'
-    + '<rect x="216" y="30" width="50" height="94" rx="8" fill="#d2b074"/>'
-    + '<text x="160" y="146" text-anchor="middle" font-size="13" font-weight="800" font-family="Nunito,sans-serif" fill="' + (kind === 'hook' ? '#f0e0b8' : '#2c1a10') + '">Tap the words below to open their meanings</text>'
-    + '</svg>';
-}
-
-function africaShape(fill, stroke) {
-  return '<path d="M154 24 C130 28 112 44 105 64 C100 79 102 96 111 109 C118 120 120 132 118 142 C117 151 122 158 131 160 C144 162 151 154 156 142 C161 129 173 122 180 111 C188 99 190 87 187 74 C183 56 170 39 154 24 Z" fill="' + fill + '" stroke="' + stroke + '" stroke-width="2"/>';
-}
-
-function svgAfricaOceans() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#cfe5f4"/>'
-    + africaShape("#8cb46b", "#547445")
-    + '<text x="64" y="104" text-anchor="middle" font-size="15" font-weight="900" font-family="Nunito,sans-serif" fill="#2d5c7f">Atlantic</text>'
-    + '<text x="64" y="122" text-anchor="middle" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#2d5c7f">Ocean</text>'
-    + '<text x="252" y="104" text-anchor="middle" font-size="15" font-weight="900" font-family="Nunito,sans-serif" fill="#2d5c7f">Indian</text>'
-    + '<text x="252" y="122" text-anchor="middle" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#2d5c7f">Ocean</text>'
-    + '<text x="160" y="30" text-anchor="middle" font-size="12" font-weight="900" font-family="Nunito,sans-serif" fill="#2d5c7f">Mediterranean Sea</text>'
-    + mapSpot(72, 86, 'A', 'Atlantic Ocean: west of Africa.', '#2d5c7f')
-    + mapSpot(248, 86, 'I', 'Indian Ocean: east of Africa.', '#2d5c7f')
-    + mapSpot(160, 42, 'M', 'Mediterranean Sea: along the north coast of Africa.', '#8b1a1a')
-    + '</svg>';
-}
-
-function svgAfricaEquator() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#cfe5f4"/>'
-    + africaShape("#8cb46b", "#547445")
-    + '<line x1="58" y1="92" x2="262" y2="92" stroke="#8b1a1a" stroke-width="4" stroke-dasharray="8 8"/>'
-    + '<text x="160" y="86" text-anchor="middle" font-size="12" font-weight="900" font-family="Nunito,sans-serif" fill="#8b1a1a">Equator</text>'
-    + mapSpot(160, 92, 'E', 'Africa lies across the equator. Some countries are north of it, some are south, and some cross it.', '#8b1a1a')
-    + '</svg>';
-}
-
-function svgCapitalsAfrica() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#cfe5f4"/>'
-    + africaShape("#8cb46b", "#547445")
-    + mapSpot(121, 121, 'W', 'Windhoek is the capital of Namibia.', '#b8860b')
-    + mapSpot(178, 132, 'M', 'Maputo is the capital of Mozambique.', '#8b1a1a')
-    + mapSpot(141, 136, 'Ma', 'Maseru is the capital of Lesotho.', '#7a5b2b')
-    + mapSpot(167, 136, 'Mb', 'Mbabane is the capital of Eswatini.', '#547445')
-    + '</svg>';
-}
-
-function svgSACapitals() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#d9ecfb"/>'
-    + '<path d="M78 52 C112 34 176 36 224 64 C238 72 246 84 238 98 C228 116 204 132 176 138 C143 146 116 142 96 132 C76 122 67 111 70 96 C72 82 63 60 78 52 Z" fill="#8cb46b" stroke="#547445" stroke-width="2"/>'
-    + '<path d="M92 124 C113 119 127 120 139 126 C124 137 110 139 92 124 Z" fill="#d7c098" stroke="#7a5b2b" stroke-width="1.5"/>'
-    + mapSpot(182, 86, 'P', 'Pretoria is in Gauteng.', '#8b1a1a')
-    + mapSpot(108, 124, 'C', 'Cape Town is in the Western Cape.', '#2d5c7f')
-    + '<text x="178" y="72" font-size="11" font-weight="800" font-family="Nunito,sans-serif" fill="#2c1a10">Gauteng</text>'
-    + '<text x="72" y="150" font-size="11" font-weight="800" font-family="Nunito,sans-serif" fill="#2c1a10">Western Cape</text>'
-    + '</svg>';
-}
-
-function svgLandlocked() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#cfe5f4"/>'
-    + '<rect x="18" y="18" width="284" height="144" rx="16" fill="#8cb46b"/>'
-    + '<rect x="110" y="52" width="100" height="76" rx="14" fill="#f7edd2" stroke="#7a5b2b" stroke-width="3"/>'
-    + '<text x="160" y="78" text-anchor="middle" font-size="16" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">Landlocked</text>'
-    + '<text x="160" y="101" text-anchor="middle" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#2c1a10">no coast</text>'
-    + '<text x="54" y="36" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#2d5c7f">Sea</text>'
-    + '<text x="255" y="152" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#2d5c7f">Sea</text>'
-    + '</svg>';
-}
-
-function svgSANeighbours() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#d9ecfb"/>'
-    + '<path d="M86 60 C126 38 186 42 226 78 C240 90 239 111 212 128 C184 145 130 147 98 130 C73 117 66 82 86 60 Z" fill="#8cb46b" stroke="#547445" stroke-width="2"/>'
-    + '<path d="M100 123 C114 117 129 117 142 124 C129 134 112 136 100 123 Z" fill="#d7c098" stroke="#7a5b2b" stroke-width="1.5"/>'
-    + mapSpot(70, 92, 'N', 'Namibia is a neighbour of South Africa and it has a coastline.', '#2d5c7f')
-    + mapSpot(249, 102, 'M', 'Mozambique is a neighbour of South Africa and it has a coastline.', '#2d5c7f')
-    + mapSpot(132, 132, 'L', 'Lesotho is surrounded by South Africa.', '#7a5b2b')
-    + mapSpot(187, 126, 'E', 'Eswatini is a small neighbour in the east.', '#8b1a1a')
-    + '</svg>';
-}
-
-function svgKalahari() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#d9ecfb"/>'
-    + '<path d="M88 58 C127 37 184 44 223 79 C236 91 235 110 210 128 C184 146 133 147 100 129 C76 116 69 84 88 58 Z" fill="#8cb46b" stroke="#547445" stroke-width="2"/>'
-    + '<ellipse cx="128" cy="95" rx="48" ry="34" fill="#d8b16d" opacity="0.96" stroke="#9d6d2a" stroke-width="2"/>'
-    + '<text x="128" y="100" text-anchor="middle" font-size="14" font-weight="900" font-family="Nunito,sans-serif" fill="#6a4316">Kalahari</text>'
-    + mapSpot(114, 92, 'N', 'Most of the Kalahari Desert is in Namibia and Botswana.', '#9d6d2a')
-    + '</svg>';
-}
-
-function svgAfricaEdgesMemory() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#64310d"/>'
-    + africaShape("#d4b16a", "#ead8ae")
-    + '<text x="52" y="108" font-size="14" font-weight="900" font-family="Nunito,sans-serif" fill="#f0e0b8">Atlantic</text>'
-    + '<text x="228" y="108" font-size="14" font-weight="900" font-family="Nunito,sans-serif" fill="#f0e0b8">Indian</text>'
-    + '<text x="108" y="30" font-size="12" font-weight="900" font-family="Nunito,sans-serif" fill="#f0e0b8">Mediterranean</text>'
-    + '</svg>';
-}
-
-function svgPhysicalMap() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#e8e2ca"/>'
-    + '<rect x="28" y="34" width="114" height="112" rx="14" fill="#f7edd2" stroke="#7a5b2b" stroke-width="2"/>'
-    + '<path d="M42 122 L72 74 L104 110 L120 60 L132 122 Z" fill="#8cb46b"/>'
-    + '<path d="M52 112 C68 96 70 83 82 71 C94 58 102 58 112 44" stroke="#4c78a8" stroke-width="5" fill="none"/>'
-    + '<text x="85" y="144" text-anchor="middle" font-size="13" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">Physical</text>'
-    + '<rect x="178" y="34" width="114" height="112" rx="14" fill="#f7edd2" stroke="#7a5b2b" stroke-width="2"/>'
-    + '<path d="M194 54 L276 54 L276 126 L194 126 Z" fill="#d7c098"/>'
-    + '<path d="M234 54 L234 126 M194 86 L276 86" stroke="#8b1a1a" stroke-width="3"/>'
-    + '<circle cx="212" cy="70" r="5" fill="#2d5c7f"/><circle cx="256" cy="104" r="5" fill="#2d5c7f"/>'
-    + '<text x="235" y="144" text-anchor="middle" font-size="13" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">Political</text>'
-    + '</svg>';
-}
-
-function svgSahara() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<defs><linearGradient id="sand1" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#efcf8a"/><stop offset="100%" stop-color="#d8a55d"/></linearGradient></defs>'
-    + '<rect width="320" height="180" rx="18" fill="url(#sand1)"/>'
-    + '<path d="M0 124 C44 112 70 114 110 124 C145 132 179 132 214 124 C248 117 280 117 320 128 L320 180 L0 180 Z" fill="#c88f49"/>'
-    + '<path d="M0 100 C38 90 74 92 120 102 C158 111 203 111 252 101 C279 95 300 95 320 101" stroke="#f5e1a5" stroke-width="12" fill="none" opacity="0.42"/>'
-    + '<text x="160" y="58" text-anchor="middle" font-size="22" font-weight="900" font-family="Nunito,sans-serif" fill="#6a4316">Sahara</text>'
-    + '<text x="160" y="82" text-anchor="middle" font-size="13" font-weight="800" font-family="Nunito,sans-serif" fill="#6a4316">North Africa</text>'
-    + '</svg>';
-}
-
-function svgNile() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#d8ecf8"/>'
-    + '<path d="M126 140 C129 120 131 104 138 90 C145 76 145 64 143 48" stroke="#3d7fc2" stroke-width="8" fill="none" stroke-linecap="round"/>'
-    + '<ellipse cx="144" cy="146" rx="30" ry="16" fill="#4f96d8" opacity="0.72"/>'
-    + '<path d="M136 44 L150 28 L164 44" fill="none" stroke="#8b1a1a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>'
-    + '<text x="168" y="28" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#8b1a1a">north</text>'
-    + '<text x="176" y="98" font-size="14" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">Nile River</text>'
-    + '<text x="144" y="150" text-anchor="middle" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#fff">Lake Victoria</text>'
-    + '<text x="166" y="58" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#2c1a10">Mediterranean Sea</text>'
-    + '</svg>';
-}
-
-function svgLakeCongo() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#d8ecf8"/>'
-    + '<ellipse cx="118" cy="88" rx="32" ry="22" fill="#4f96d8"/>'
-    + '<text x="118" y="92" text-anchor="middle" font-size="11" font-weight="900" font-family="Nunito,sans-serif" fill="#fff">Victoria</text>'
-    + '<path d="M184 54 C152 64 150 96 182 102 C214 108 213 138 186 146" stroke="#3d7fc2" stroke-width="8" fill="none" stroke-linecap="round"/>'
-    + '<line x1="144" y1="74" x2="260" y2="74" stroke="#8b1a1a" stroke-width="3" stroke-dasharray="8 7"/>'
-    + '<text x="252" y="68" text-anchor="end" font-size="11" font-weight="900" font-family="Nunito,sans-serif" fill="#8b1a1a">Equator</text>'
-    + '<text x="212" y="122" font-size="13" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">Congo</text>'
-    + '</svg>';
-}
-
-function svgMountains() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#e6f0f6"/>'
-    + '<path d="M46 136 L108 48 L170 136 Z" fill="#8b8e95"/>'
-    + '<path d="M86 80 L108 48 L130 80 Z" fill="#fff"/>'
-    + '<path d="M142 136 L212 58 L282 136 Z" fill="#6e7f8c"/>'
-    + '<path d="M188 86 L212 58 L236 86 Z" fill="#fff"/>'
-    + '<text x="108" y="154" text-anchor="middle" font-size="11" font-weight="800" font-family="Nunito,sans-serif" fill="#2c1a10">Kilimanjaro</text>'
-    + '<text x="212" y="154" text-anchor="middle" font-size="11" font-weight="800" font-family="Nunito,sans-serif" fill="#2c1a10">Thabana Ntlenyana</text>'
-    + '</svg>';
-}
-
-function svgFalls() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#d4edf9"/>'
-    + '<path d="M40 54 L152 54 L152 150" stroke="#3d7fc2" stroke-width="16" fill="none" stroke-linecap="round"/>'
-    + '<path d="M210 42 L210 138" stroke="#3d7fc2" stroke-width="12" fill="none" stroke-linecap="round"/>'
-    + '<path d="M152 146 C166 146 178 146 192 146" stroke="#3d7fc2" stroke-width="15" fill="none" stroke-linecap="round"/>'
-    + '<text x="96" y="42" text-anchor="middle" font-size="12" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">Victoria Falls</text>'
-    + '<text x="210" y="32" text-anchor="middle" font-size="12" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">Maletsunyane</text>'
-    + '</svg>';
-}
-
-function svgSouthernRivers() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#d8ecf8"/>'
-    + '<path d="M60 100 C110 98 150 96 202 100 C230 102 250 99 268 90" stroke="#3d7fc2" stroke-width="8" fill="none" stroke-linecap="round"/>'
-    + '<path d="M70 60 C112 62 138 72 160 90 C176 103 190 118 226 126" stroke="#4c88c6" stroke-width="7" fill="none" stroke-linecap="round"/>'
-    + '<text x="94" y="92" font-size="12" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">Orange</text>'
-    + '<text x="74" y="55" font-size="12" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">Limpopo</text>'
-    + '<text x="255" y="85" font-size="11" font-weight="800" font-family="Nunito,sans-serif" fill="#2d5c7f">Atlantic</text>'
-    + '<text x="232" y="140" font-size="11" font-weight="800" font-family="Nunito,sans-serif" fill="#2c1a10">Zimbabwe border</text>'
-    + '</svg>';
-}
-
-function svgDrakensberg() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#efe5cb"/>'
-    + '<path d="M22 136 L56 108 L76 114 L102 88 L128 100 L156 66 L180 82 L208 54 L244 86 L298 136 Z" fill="#7a5b2b"/>'
-    + '<path d="M22 150 L76 124 L102 132 L128 116 L156 90 L180 100 L208 72 L244 102 L298 150 Z" fill="#a67840"/>'
-    + '<text x="160" y="34" text-anchor="middle" font-size="15" font-weight="900" font-family="Nunito,sans-serif" fill="#2c1a10">uKhahlamba-Drakensberg</text>'
-    + '<text x="160" y="52" text-anchor="middle" font-size="12" font-weight="800" font-family="Nunito,sans-serif" fill="#2c1a10">South Africa and Lesotho</text>'
-    + '</svg>';
-}
-
-function svgPhotoSource() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#f4ecd7"/>'
-    + '<rect x="42" y="32" width="236" height="116" rx="14" fill="#fff7e7" stroke="#7a5b2b" stroke-width="3"/>'
-    + '<rect x="66" y="58" width="188" height="70" rx="10" fill="#cfe5f4"/>'
-    + '<path d="M74 124 L118 82 L148 102 L184 70 L246 124 Z" fill="#8cb46b"/>'
-    + '<circle cx="222" cy="76" r="10" fill="#f6cc56"/>'
-    + '<rect x="138" y="42" width="44" height="10" rx="5" fill="#7a5b2b"/>'
-    + '</svg>';
-}
-
-function svgVillage() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#d9ecfb"/>'
-    + '<rect y="118" width="320" height="62" fill="#8cb46b"/>'
-    + '<rect x="64" y="92" width="34" height="28" fill="#d7c098"/><polygon points="60,94 81,76 102,94" fill="#7a5b2b"/>'
-    + '<rect x="132" y="84" width="34" height="36" fill="#d7c098"/><polygon points="128,86 149,68 170,86" fill="#7a5b2b"/>'
-    + '<rect x="210" y="96" width="34" height="24" fill="#d7c098"/><polygon points="206,98 227,80 248,98" fill="#7a5b2b"/>'
-    + '<path d="M0 122 C40 118 66 114 110 121 C148 127 187 126 230 120 C262 116 289 115 320 119" stroke="#6f9c57" stroke-width="11" fill="none"/>'
-    + '</svg>';
-}
-
-function svgCity() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#d8ecf8"/>'
-    + '<rect y="126" width="320" height="54" fill="#8c8f96"/>'
-    + '<rect x="40" y="70" width="38" height="56" fill="#6e7f8c"/>'
-    + '<rect x="84" y="54" width="46" height="72" fill="#5a6772"/>'
-    + '<rect x="138" y="36" width="52" height="90" fill="#4f5965"/>'
-    + '<rect x="198" y="58" width="44" height="68" fill="#5a6772"/>'
-    + '<rect x="248" y="76" width="34" height="50" fill="#6e7f8c"/>'
-    + '<line x1="0" y1="144" x2="320" y2="144" stroke="#f7edd2" stroke-width="4" stroke-dasharray="18 10"/>'
-    + '</svg>';
-}
-
-function svgFarm() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#d9ecfb"/>'
-    + '<rect y="116" width="320" height="64" fill="#8cb46b"/>'
-    + '<path d="M18 134 C44 128 67 126 91 132 C117 138 140 141 165 136 C188 132 212 129 235 133 C262 138 287 140 320 134" stroke="#6e4d21" stroke-width="3" fill="none"/>'
-    + '<path d="M18 146 C44 140 67 138 91 144 C117 150 140 153 165 148 C188 144 212 141 235 145 C262 150 287 152 320 146" stroke="#6e4d21" stroke-width="3" fill="none"/>'
-    + '<rect x="48" y="90" width="36" height="26" fill="#d7c098"/><polygon points="44,92 66,74 88,92" fill="#7a5b2b"/>'
-    + '<circle cx="244" cy="108" r="11" fill="#fff"/><circle cx="259" cy="108" r="11" fill="#fff"/><circle cx="251" cy="101" r="11" fill="#fff"/>'
-    + '</svg>';
-}
-
-function svgPhotoClues() {
-  return '<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">'
-    + '<rect width="320" height="180" rx="18" fill="#f4ecd7"/>'
-    + '<rect x="46" y="30" width="228" height="120" rx="14" fill="#fff7e7" stroke="#7a5b2b" stroke-width="3"/>'
-    + '<rect x="62" y="46" width="196" height="88" rx="10" fill="#d8ecf8"/>'
-    + '<path d="M66 120 L106 84 L136 102 L168 72 L236 120 Z" fill="#8cb46b"/>'
-    + '<rect x="194" y="82" width="30" height="38" fill="#5a6772"/>'
-    + '<line x1="242" y1="64" x2="280" y2="26" stroke="#2c1a10" stroke-width="5"/>'
-    + '<circle cx="280" cy="26" r="18" fill="none" stroke="#2c1a10" stroke-width="5"/>'
-    + '</svg>';
-}
-
-function buildVisualHTML(uid, idx, card) {
-  var key = uid + ':' + idx;
-
-  if (key === 'w1u1:0') return visualWrap(svgCompassBasic(), 'Political maps show borders and cities. Physical maps show landforms.');
-  if (key === 'w1u1:1') return visualWrap(svgCompassBasic(), 'North is top, south is bottom, east is right, and west is left.');
-  if (key === 'w1u1:2') return visualWrap(svgCompassEight(), 'The diagonals make NE, NW, SE, and SW.');
-  if (key === 'w1u1:3') return visualWrap(svgCountryDirection(), 'Use the start point, then look at where the second place sits.');
-  if (key === 'w1u1:4') return visualWrap(svgEquator(), 'The equator divides Earth into north and south.');
-  if (key === 'w1u1:5') return visualWrap(svgCountryDirection(), 'Use up, down, left, and right first. Then combine them.');
-  if (key === 'w1u1:6') return visualWrap(svgDeskMemory(), 'Picture the map on a desk and lock the directions in place.');
-  if (key === 'w1u1:7') return visualWrap(svgGlossary(card.type === 'hook' ? 'hook' : 'plain'), 'Tap the words below to open their meanings.');
-
-  if (key === 'w1u2:0') return visualWrap(svgAfricaOceans(), 'Tap A, I, or M on the map.');
-  if (key === 'w1u2:1') return visualWrap(svgAfricaEquator(), 'Tap the equator line.');
-  if (key === 'w1u2:2') return visualWrap(svgCapitalsAfrica(), 'Tap a capital: W, M, Ma, or Mb.');
-  if (key === 'w1u2:3') return visualWrap(svgSACapitals(), 'Tap P or C.');
-  if (key === 'w1u2:4') return visualWrap(svgLandlocked(), 'The middle country has land all around it, so it is landlocked.');
-  if (key === 'w1u2:5') return visualWrap(svgSANeighbours(), 'Tap N, M, L, or E.');
-  if (key === 'w1u2:6') return visualWrap(svgKalahari(), 'Tap the Kalahari.');
-  if (key === 'w1u2:7') return visualWrap(svgAfricaEdgesMemory(), 'Left, right, top. Atlantic, Indian, Mediterranean.');
-  if (key === 'w1u2:8') return visualWrap(svgGlossary(card.type === 'hook' ? 'hook' : 'plain'), 'Tap the words below to open their meanings.');
-
-  if (key === 'w1u3:0') return visualWrap(svgPhysicalMap(), 'Left shows landforms. Right shows borders and cities.');
-  if (key === 'w1u3:1') return visualWrap(svgSahara(), 'Huge, hot, dry desert in North Africa.');
-  if (key === 'w1u3:2') return visualWrap(svgNile(), 'The Nile starts near Lake Victoria and flows north.');
-  if (key === 'w1u3:3') return visualWrap(svgLakeCongo(), 'Lake Victoria is the biggest lake in Africa. The Congo crosses the equator twice.');
-  if (key === 'w1u3:4') return visualWrap(svgMountains(), 'Kilimanjaro is highest in Africa. Thabana Ntlenyana is highest in the Drakensberg.');
-  if (key === 'w1u3:5') return visualWrap(svgFalls(), 'Victoria Falls is the biggest. Maletsunyane is the highest in southern Africa.');
-  if (key === 'w1u3:6') return visualWrap(svgSouthernRivers(), 'The Orange flows west to the Atlantic. The Limpopo helps form the border with Zimbabwe.');
-  if (key === 'w1u3:7') return visualWrap(svgDrakensberg(), 'This mountain range forms part of the border between South Africa and Lesotho.');
-  if (key === 'w1u3:8') return visualWrap(svgSouthernRivers(), 'Follow the water across the map: Nile north, Congo looping, Orange west.');
-  if (key === 'w1u3:9') return visualWrap(svgGlossary(card.type === 'hook' ? 'hook' : 'plain'), 'Tap the words below to open their meanings.');
-
-  if (key === 'w1u4:0') return visualWrap(svgPhotoSource(), 'A photo gives clues about land, buildings, roads, plants, water, and people.');
-  if (key === 'w1u4:1') return visualWrap(svgVillage(), 'Village: fewer buildings, more open land, homes farther apart.');
-  if (key === 'w1u4:2') return visualWrap(svgCity(), 'City: more buildings, busy roads, and more people.');
-  if (key === 'w1u4:3') return visualWrap(svgFarm(), 'Small fields, crops, and animals are clues that you may be looking at a farm.');
-  if (key === 'w1u4:4') return visualWrap(svgPhotoClues(), 'Look for clues first. Then decide if the place is rural, urban, or used for farming.');
-  if (key === 'w1u4:5') return visualWrap(svgPhotoSource(), 'Use picture clues to sort village, city, and farm.');
-  if (key === 'w1u4:6') return visualWrap(svgGlossary(card.type === 'hook' ? 'hook' : 'plain'), 'Tap the words below to open their meanings.');
-
-  return '';
-}
-
 
 /* ============================================
    RENDER: Home
@@ -2335,13 +1966,19 @@ function rHome() {
       dots += '<div class="wc-dot' + (isDone ? ' done' : '') + '"></div>';
     }
 
-    html += '<div class="world-card wc' + w.id + '" onclick="go(\'world\',' + w.id + ')">'
+    var isLocked = w.id !== 1;
+
+    html += '<div class="world-card wc' + w.id + (isLocked ? ' wc-locked' : '') + '"'
+      + (isLocked ? '' : ' onclick="go(\'world\',' + w.id + ')"') + '>'
       + (w.id === 1 ? rose() : '')
       + '<div class="wc-emoji">' + w.emoji + '</div>'
       + '<div class="wc-dots">' + dots + '</div>'
       + '<div class="wc-term">' + w.term + '</div>'
       + '<div class="wc-name">' + w.name + '</div>'
-      + '<div class="wc-enter">' + done + '/' + total + ' units &rarr;</div>'
+      + (isLocked
+          ? '<div class="wc-locked-label"><div class="wc-locked-icon">🔒</div><div class="wc-locked-text">Unlocking ' + w.term.split(':')[0] + ' soon</div></div>'
+          : '<div class="wc-enter">' + done + '/' + total + ' units &rarr;</div>'
+        )
       + '</div>';
   }
 
@@ -2471,11 +2108,9 @@ function rUnit(wid, uid) {
   showCard(0, null);
 }
 
-function buildCardHTML(card, uid, idx) {
-  var visual = buildVisualHTML(uid, idx, card);
+function buildCardHTML(card) {
   if (card.type === 'gloss') {
-    var h = visual
-      + '<div class="card-emoji">📖</div>'
+    var h = '<div class="card-emoji">📖</div>'
       + '<div class="card-heading">Keyword Glossary</div>'
       + '<div class="gloss-hint">Tap a term to see its definition</div>'
       + '<div class="gloss-list">';
@@ -2488,8 +2123,7 @@ function buildCardHTML(card, uid, idx) {
     h += '</div>';
     return h;
   }
-  return visual
-    + '<div class="card-emoji">' + card.emoji + '</div>'
+  return '<div class="card-emoji">' + card.emoji + '</div>'
     + '<div class="card-heading">' + card.head + '</div>'
     + '<div class="card-body">' + card.body + '</div>';
 }
@@ -2528,7 +2162,7 @@ function showCard(idx, direction) {
 
   var doRender = function() {
     surface.className = 'card-surface' + (card.type === 'hook' ? ' card-hook' : '');
-    surface.innerHTML = buildCardHTML(card, curUid, idx);
+    surface.innerHTML = buildCardHTML(card);
     surface.scrollTop = 0;
   };
 
@@ -2598,6 +2232,12 @@ function startQuiz() {
   curQIdx      = 0;
   quizScore    = 0;
   quizAnswered = false;
+
+  /* Shuffle all questions and draw up to 8 per session */
+  var all  = QUIZ[curUid] || [];
+  var pool = shuffle(all);
+  quizDeck = pool.slice(0, Math.min(8, pool.length));
+
   /* Disable swipe during quiz */
   var vp = document.getElementById('card-viewport');
   vp.ontouchstart = null;
@@ -2606,7 +2246,7 @@ function startQuiz() {
 }
 
 function showQuestion(idx) {
-  var qs      = QUIZ[curUid];
+  var qs      = quizDeck;
   var q       = qs[idx];
   var vp      = document.getElementById('card-viewport');
   var counter = document.getElementById('card-counter');
@@ -2638,7 +2278,7 @@ function handleAnswer(chosen) {
   if (quizAnswered) return;
   quizAnswered = true;
 
-  var qs   = QUIZ[curUid];
+  var qs   = quizDeck;
   var q    = qs[curQIdx];
   var surf = document.getElementById('quiz-surface');
   var opts = document.querySelectorAll('.quiz-opt');
@@ -2677,9 +2317,8 @@ function handleAnswer(chosen) {
 }
 
 function advanceQuiz() {
-  var qs = QUIZ[curUid];
   curQIdx++;
-  if (curQIdx >= qs.length) {
+  if (curQIdx >= quizDeck.length) {
     finishQuiz();
   } else {
     showQuestion(curQIdx);
@@ -2689,8 +2328,7 @@ function advanceQuiz() {
 function finishQuiz() {
   quizMode = false;
 
-  var qs      = QUIZ[curUid];
-  var total   = qs.length;
+  var total   = quizDeck.length;
   var pct     = Math.round((quizScore / total) * 100);
   var perfect = (quizScore === total);
 
@@ -2715,10 +2353,9 @@ function finishQuiz() {
   var sub   = 'You earned ' + xpEarned + ' XP.';
 
   var rightItems = '';
-  var qset = QUIZ[curUid];
-  for (var i = 0; i < qset.length; i++) {
-    rightItems += '<div>' + (i + 1) + '. ' + qset[i].q + '</div>'
-      + '<div style="font-weight:700;margin-bottom:6px;">\u2192 ' + qset[i].opts[qset[i].ans] + '</div>';
+  for (var i = 0; i < quizDeck.length; i++) {
+    rightItems += '<div>' + (i + 1) + '. ' + quizDeck[i].q + '</div>'
+      + '<div style="font-weight:700;margin-bottom:6px;">\u2192 ' + quizDeck[i].opts[quizDeck[i].ans] + '</div>';
   }
 
   var html = '<div class="quiz-surface" style="gap:0;">'
