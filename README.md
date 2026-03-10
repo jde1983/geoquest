@@ -17,11 +17,28 @@ A single-page study app with four themed worlds — one per school term — each
 
 ```
 geoquest/
-├── index.html      ← Everything: HTML, CSS, JS, all content and quiz data
-├── sw.js           ← Service worker (cache-first, offline after first load)
-├── manifest.json   ← PWA manifest
-├── icon-192.png    ← App icon (home screen, manifest)
-├── icon-512.png    ← App icon (PWA install / splash)
+├── index.html        ← Everything: HTML, CSS, JS, all content and quiz data
+├── sw.js             ← Service worker (cache-first, offline after first load)
+├── manifest.json     ← PWA manifest
+├── icon-192.png      ← App icon (home screen, manifest)
+├── icon-512.png      ← App icon (PWA install / splash)
+├── images/           ← CC-licensed photos and maps (Phase 6)
+│   ├── africa-physical-map.png
+│   ├── africa-location-map.png
+│   ├── africa-orthographic.png
+│   ├── african-village.jpg
+│   ├── cape-town.png
+│   ├── compass-rose-8pt.png
+│   ├── drakensberg.jpg
+│   ├── mount-kilimanjaro.jpg
+│   ├── lake-victoria.jpg
+│   ├── nile-topographic.jpg
+│   ├── orange-river.png
+│   ├── reinel-compass-rose.png
+│   ├── sahara-dunes.jpg
+│   ├── south-africa-location.png
+│   ├── victoria-falls.jpg
+│   └── world-political-map.png
 └── README.md
 ```
 
@@ -60,6 +77,12 @@ Each unit contains content cards, a memory hook card, a tap-to-reveal glossary c
 - Memory hook cards — visually distinct dark amber, one per unit
 - Glossary card at end of each unit — tap to reveal definitions
 - Quiz button appears only after all cards are viewed and the unit is not yet done
+
+### Card photography (Phase 6)
+
+16 info cards carry a contextual photograph below the card text. Images are lazy-loaded, full card width, capped at 220px height, with a small italic credit line. 8 abstract or technique cards were intentionally left without images.
+
+All images are sourced from Wikimedia Commons under CC or public domain licences. See `geoquest-images-manifest.md` for the full download list with source filenames, licence details, and direct URLs.
 
 ### Quiz
 - Multiple choice, 4 options per question
@@ -150,7 +173,7 @@ On iOS (Safari): tap Share → Add to Home Screen.
 | 4 | Quiz engine | ✅ Done |
 | 4b | Quiz fixes: shuffle + content gaps + wording audit | ✅ Done |
 | 5 | XP + levelling visuals (overlay, bar animation, pill pulse) | ✅ Done |
-| 6 | Visual enhancements (Creative Commons photography) | ⏳ Pending |
+| 6 | Visual enhancements (Creative Commons photography) | ✅ Done |
 | 7 | Celebrations + Grand Quest complete screen | ✅ Done |
 | 8 | Deploy + test on iPad | ⏳ Ongoing |
 | 9 | Terms 2–4 content + units | ⏳ Pending |
