@@ -26,17 +26,14 @@ geoquest/
 │   ├── africa-capitals-map.png
 │   ├── africa-oceans-map.png
 │   ├── africa-on-world-political-map.png
-│   ├── africa-orthographic.png
-│   ├── africa-physical-map.png
 │   ├── africa-physical-vs-political.png
 │   ├── african-village.png
 │   ├── cape-town.png
 │   ├── compass-cardinal.png
 │   ├── compass-rose-8pt.png
-│   ├── congo-river.png
+│   ├── congo-river-lake-victoria.jpg
 │   ├── drakensberg.png
 │   ├── equator-hemispheres.png
-│   ├── lake-victoria.png
 │   ├── landlocked-countries.png
 │   ├── limpopo-river.jpg
 │   ├── mount-kilimanjaro.png
@@ -46,7 +43,6 @@ geoquest/
 │   ├── sahara-dunes.png
 │   ├── south-africa-border-countries.jpg
 │   ├── south-africa-capitals.jpg
-│   ├── south-africa-location.png
 │   ├── southern-africa-zoom.png
 │   ├── subsistence-farming.jpg
 │   ├── victoria-falls.jpg
@@ -92,7 +88,7 @@ Each unit contains content cards, a memory hook card, a tap-to-reveal glossary c
 
 ### Card photography (Phase 6)
 
-24 info cards carry contextual photographs below the card text. Six of those cards show two images side by side. Images are lazy-loaded, full card width, capped at 220px height (160px for paired images), with a small italic credit line. 4 abstract or technique cards were intentionally left without images.
+24 info cards carry contextual photographs below the card text. One card shows two images side by side. Images are lazy-loaded, full card width, capped at 220px height (160px for paired images), with a small italic credit line. 4 abstract or technique cards were intentionally left without images.
 
 All images are sourced from Wikimedia Commons under CC or public domain licences.
 
