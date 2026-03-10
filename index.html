@@ -935,6 +935,17 @@
   .theme-w2 .card-img-credit { color: var(--w2-text); }
   .theme-w3 .card-img-credit { color: var(--w3-text); }
   .theme-w4 .card-img-credit { color: var(--w4-text); }
+  .card-img-pair {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .card-img-pair .card-img {
+    margin-top: 0;
+    flex: 1;
+    width: 0;
+    max-height: 160px;
+  }
 
   /* Keyword highlights */
   .theme-w1 .card-surface mark {
@@ -1430,15 +1441,16 @@ var CARDS = {
       type: 'info', emoji: '🗺️',
       head: 'Two kinds of maps',
       body: 'Maps come in two main types. A <mark>political map</mark> shows country borders and capital cities. A <mark>physical map</mark> shows rivers, mountains, deserts, and the height of the land. Both types use a key to explain their symbols.',
-      img: 'images/africa-physical-map.png',
-      imgCredit: 'Physical Map of Africa (2021). Public domain, Wikimedia Commons.'
+      img: 'images/africa-physical-vs-political.png',
+      img2: 'images/physical-vs-political.png',
+      imgCredit: 'Left: physical vs political maps of Africa (no flags). Right: physical vs political with country flags. Wikimedia Commons.'
     },
     {
       type: 'info', emoji: '🧭',
       head: 'The four cardinal directions',
       body: 'The four main compass directions are called <mark>cardinal directions</mark>. They are <mark>North</mark>, <mark>South</mark>, <mark>East</mark>, and <mark>West</mark>. On most maps, North points to the top of the page. A compass needle always points North.',
-      img: 'images/reinel-compass-rose.png',
-      imgCredit: 'Reinel compass rose, c.1485. Alvesgaspar, CC BY-SA 3.0, Wikimedia Commons.'
+      img: 'images/compass-cardinal.png',
+      imgCredit: 'Compass showing cardinal directions N, S, E, W. Wikimedia Commons.'
     },
     {
       type: 'info', emoji: '↗️',
@@ -1458,8 +1470,9 @@ var CARDS = {
       type: 'info', emoji: '🌐',
       head: 'The equator',
       body: 'The <mark>equator</mark> is a line around the middle of the Earth. It divides the Earth into the <mark>Northern Hemisphere</mark> (above) and the <mark>Southern Hemisphere</mark> (below). Countries on the equator get direct, strong sunlight all year. South Africa lies south of the equator.',
-      img: 'images/africa-orthographic.png',
-      imgCredit: 'Africa on the globe. Martin23230, CC BY-SA 3.0, Wikimedia Commons.'
+      img: 'images/equator-hemispheres.png',
+      img2: 'images/africa-orthographic.png',
+      imgCredit: 'Left: equator dividing Northern and Southern Hemispheres. Right: Africa highlighted on the globe. Wikimedia Commons.'
     },
     {
       type: 'info', emoji: '📐',
@@ -1491,44 +1504,51 @@ var CARDS = {
       type: 'info', emoji: '🌊',
       head: 'The oceans around Africa',
       body: 'Africa has water on all sides. The <mark>Atlantic Ocean</mark> lies to the west. The <mark>Indian Ocean</mark> lies to the east. The <mark>Mediterranean Sea</mark> runs along the north coast of Africa. Knowing which ocean is which side is one of the most tested facts in this unit.',
-      img: 'images/africa-location-map.png',
-      imgCredit: 'Africa location map. Eric Gaba (Sting), CC BY-SA 3.0, Wikimedia Commons.'
+      img: 'images/africa-oceans-map.png',
+      imgCredit: 'Map of Africa showing the Atlantic Ocean, Indian Ocean, and Mediterranean Sea. Wikimedia Commons.'
     },
     {
       type: 'info', emoji: '🌍',
       head: 'Africa on the world map',
       body: 'Africa is the second largest continent on Earth. The <mark>equator</mark> runs through the middle of Africa from west to east. <mark>Algeria</mark> is the largest country in Africa. Five equator countries have coastlines: Gabon, Congo, DRC, Kenya, and Somalia.',
-      img: 'images/world-political-map.png',
+      img: 'images/africa-on-world-political-map.png',
       imgCredit: 'CIA political world map. US Government, public domain.'
     },
     {
       type: 'info', emoji: '🏙️',
       head: 'Countries and capital cities',
-      body: 'Key capital cities to know: <mark>Windhoek</mark> is the capital of Namibia. <mark>Dar es Salaam</mark> is the capital of Tanzania. <mark>Maputo</mark> is the capital of Mozambique. <mark>Nairobi</mark> is the capital of Kenya. <mark>Cairo</mark> is the capital of Egypt.'
+      body: 'Key capital cities to know: <mark>Windhoek</mark> is the capital of Namibia. <mark>Dar es Salaam</mark> is the capital of Tanzania. <mark>Maputo</mark> is the capital of Mozambique. <mark>Nairobi</mark> is the capital of Kenya. <mark>Cairo</mark> is the capital of Egypt.',
+      img: 'images/africa-capitals-map.png',
+      imgCredit: 'Political map of Africa with capital cities marked. Wikimedia Commons.'
     },
     {
       type: 'info', emoji: '🇿🇦',
       head: 'South Africa\'s two capital cities',
-      body: 'South Africa has two capital cities. <mark>Pretoria</mark> is in Gauteng — it is the administrative capital, where government departments are based. <mark>Cape Town</mark> is in the Western Cape — it is the legislative capital, where Parliament meets. These are the only two tested at Grade 5.'
+      body: 'South Africa has two capital cities. <mark>Pretoria</mark> is in Gauteng — it is the administrative capital, where government departments are based. <mark>Cape Town</mark> is in the Western Cape — it is the legislative capital, where Parliament meets. These are the only two tested at Grade 5.',
+      img: 'images/south-africa-capitals.jpg',
+      imgCredit: 'Map of South Africa showing Pretoria and Cape Town. Wikimedia Commons.'
     },
     {
       type: 'info', emoji: '🔒',
       head: 'Landlocked countries',
       body: 'A <mark>landlocked</mark> country has no coastline. It is completely surrounded by other countries. <mark>Zimbabwe</mark> and <mark>Chad</mark> are landlocked examples you must know. <mark>South Africa</mark> and <mark>Tanzania</mark> both have coastlines. Botswana, Lesotho, and Eswatini are also landlocked.',
-      img: 'images/africa-location-map.png',
-      imgCredit: 'Africa location map. Eric Gaba (Sting), CC BY-SA 3.0, Wikimedia Commons.'
+      img: 'images/landlocked-countries.png',
+      imgCredit: 'Political map of Africa showing country borders and coastlines. Wikimedia Commons.'
     },
     {
       type: 'info', emoji: '🗺️',
       head: 'Countries that border South Africa',
       body: 'South Africa shares borders with six countries. Two have coastlines: <mark>Namibia</mark> to the north-west (capital: Windhoek) and <mark>Mozambique</mark> to the north-east (capital: Maputo). The other four — Botswana, Zimbabwe, Lesotho, and Eswatini — are all landlocked.',
-      img: 'images/south-africa-location.png',
-      imgCredit: "South Africa's location on the continent. Wikimedia Commons, CC BY-SA 3.0."
+      img: 'images/south-africa-border-countries.jpg',
+      img2: 'images/south-africa-location.png',
+      imgCredit: "Left: South Africa's six border countries. Right: South Africa's position on the continent. Wikimedia Commons."
     },
     {
       type: 'info', emoji: '🌐',
       head: 'Landlocked neighbours of South Africa',
-      body: '<mark>Lesotho</mark> is entirely surrounded by South Africa — its capital is <mark>Maseru</mark>. <mark>Eswatini</mark> is bordered by South Africa and Mozambique — its capital is <mark>Mbabane</mark>. The Congo River flows west into the Atlantic Ocean, crossing the equator twice on its way.'
+      body: '<mark>Lesotho</mark> is entirely surrounded by South Africa — its capital is <mark>Maseru</mark>. <mark>Eswatini</mark> is bordered by South Africa and Mozambique — its capital is <mark>Mbabane</mark>. The Congo River flows west into the Atlantic Ocean, crossing the equator twice on its way.',
+      img: 'images/southern-africa-zoom.png',
+      imgCredit: 'Map of southern Africa showing Lesotho and Eswatini. Wikimedia Commons.'
     },
     {
       type: 'hook', emoji: '✨',
@@ -1557,34 +1577,38 @@ var CARDS = {
     {
       type: 'info', emoji: '🗺️',
       head: 'Physical vs political maps',
-      body: 'A <mark>physical map</mark> uses colour and shading to show what the land looks like — rivers, mountains, deserts, and lakes. A <mark>political map</mark> shows country borders and capital cities. Knowing which type shows which features is a tested skill.'
+      body: 'A <mark>physical map</mark> uses colour and shading to show what the land looks like — rivers, mountains, deserts, and lakes. A <mark>political map</mark> shows country borders and capital cities. Knowing which type shows which features is a tested skill.',
+      img: 'images/africa-physical-vs-political.png',
+      img2: 'images/africa-physical-map.png',
+      imgCredit: 'Left: physical vs political map comparison. Right: physical map of Africa showing terrain. Wikimedia Commons.'
     },
     {
       type: 'info', emoji: '🏜️',
       head: 'The Sahara Desert',
       body: 'The <mark>Sahara Desert</mark> is the largest hot, sandy desert in the world. It covers most of northern Africa. Countries including Algeria, Mali, Niger, and Chad contain large parts of the Sahara. Very few plants and animals can survive its extreme heat and lack of water.',
-      img: 'images/sahara-dunes.jpg',
+      img: 'images/sahara-dunes.png',
       imgCredit: 'Erg Chebbi sand dunes, Sahara Desert, Morocco. Wikimedia Commons.'
     },
     {
       type: 'info', emoji: '💧',
       head: 'The Nile River',
       body: 'The <mark>Nile River</mark> is the longest river in the world. It starts in <mark>Lake Victoria</mark> and flows north all the way to the <mark>Mediterranean Sea</mark>. The Nile passes through Uganda, Sudan, and Egypt. Ancient civilisations grew up along its banks because of the fertile soil left behind by floods.',
-      img: 'images/nile-topographic.jpg',
+      img: 'images/nile-river.png',
       imgCredit: 'The Nile River from NASA SRTM elevation data. Public domain.'
     },
     {
       type: 'info', emoji: '🌊',
       head: 'Lake Victoria and the Congo River',
       body: '<mark>Lake Victoria</mark> is the largest lake in Africa and the starting point of the Nile River. The <mark>Congo River</mark> is a separate river — it winds through the rainforest, crosses the equator twice, and flows west into the <mark>Atlantic Ocean</mark>.',
-      img: 'images/lake-victoria.jpg',
-      imgCredit: 'Lake Victoria from space. NASA, public domain.'
+      img: 'images/lake-victoria.png',
+      img2: 'images/congo-river.png',
+      imgCredit: 'Left: Lake Victoria, the source of the Nile. Right: The Congo River course. Wikimedia Commons.'
     },
     {
       type: 'info', emoji: '🏔️',
       head: 'Africa\'s highest mountains',
       body: '<mark>Mount Kilimanjaro</mark> is the highest point in all of Africa at 5 895 m. It is in Tanzania. <mark>Thabana Ntlenyana</mark> is the highest peak in the <mark>uKhahlamba-Drakensberg</mark> mountains at 3 482 m. It sits in Lesotho, not in South Africa.',
-      img: 'images/mount-kilimanjaro.jpg',
+      img: 'images/mount-kilimanjaro.png',
       imgCredit: 'Mount Kilimanjaro, 5,895 m, the highest peak in Africa. Wikimedia Commons.'
     },
     {
@@ -1599,13 +1623,14 @@ var CARDS = {
       head: 'Rivers of southern Africa',
       body: 'The <mark>Orange River</mark> is the longest river in South Africa. It flows west into the <mark>Atlantic Ocean</mark>. The <mark>Limpopo River</mark> forms the border between South Africa and Zimbabwe. <mark>Beitbridge</mark> is the border crossing that spans the Limpopo River.',
       img: 'images/orange-river.png',
-      imgCredit: "The Orange River, South Africa's longest river. Wikimedia Commons, CC BY-SA 3.0."
+      img2: 'images/limpopo-river.jpg',
+      imgCredit: 'Left: The Orange River. Right: The Limpopo River border. Wikimedia Commons.'
     },
     {
       type: 'info', emoji: '⛰️',
       head: 'The uKhahlamba-Drakensberg',
       body: 'The <mark>uKhahlamba-Drakensberg</mark> is the major mountain range along South Africa\'s eastern edge. It runs through KwaZulu-Natal and extends into Lesotho. It is a UNESCO World Heritage site famous for ancient San rock art. Its highest peak, Thabana Ntlenyana, is in Lesotho at 3 482 m.',
-      img: 'images/drakensberg.jpg',
+      img: 'images/drakensberg.png',
       imgCredit: 'The Amphitheatre, uKhahlamba-Drakensberg, KwaZulu-Natal. Wikimedia Commons.'
     },
     {
@@ -1644,7 +1669,7 @@ var CARDS = {
       type: 'info', emoji: '🏘️',
       head: 'Villages in Africa',
       body: 'A <mark>village</mark> is a small community in a <mark>rural</mark> area. Villages often have traditional housing built from local materials. People may grow their own food or keep animals nearby. Villages have fewer services than cities — fewer schools, hospitals, and shops.',
-      img: 'images/african-village.jpg',
+      img: 'images/african-village.png',
       imgCredit: 'Village near Mount Kilimanjaro, Tanzania. Chris 73, CC BY-SA 3.0, Wikimedia Commons.'
     },
     {
@@ -1657,7 +1682,9 @@ var CARDS = {
     {
       type: 'info', emoji: '🌾',
       head: 'Subsistence farming',
-      body: '<mark>Subsistence farming</mark> is when a family grows or raises just enough food for themselves. They do not usually sell their produce — it all goes to feeding the household. Subsistence farmers depend on rainfall and use simple tools. This type of farming is common in rural parts of Africa.'
+      body: '<mark>Subsistence farming</mark> is when a family grows or raises just enough food for themselves. They do not usually sell their produce — it all goes to feeding the household. Subsistence farmers depend on rainfall and use simple tools. This type of farming is common in rural parts of Africa.',
+      img: 'images/subsistence-farming.jpg',
+      imgCredit: 'Small-scale subsistence farming in rural Africa. Wikimedia Commons.'
     },
     {
       type: 'info', emoji: '👁️',
@@ -2312,7 +2339,15 @@ function buildCardHTML(card) {
   var h = '<div class="card-emoji">' + card.emoji + '</div>'
     + '<div class="card-heading">' + card.head + '</div>'
     + '<div class="card-body">' + card.body + '</div>';
-  if (card.img) {
+  if (card.img && card.img2) {
+    h += '<div class="card-img-pair">'
+      + '<img class="card-img" src="' + card.img + '" alt="' + card.head + '" loading="lazy">'
+      + '<img class="card-img" src="' + card.img2 + '" alt="' + card.head + '" loading="lazy">'
+      + '</div>';
+    if (card.imgCredit) {
+      h += '<span class="card-img-credit">' + card.imgCredit + '</span>';
+    }
+  } else if (card.img) {
     h += '<img class="card-img" src="' + card.img + '" alt="' + card.head + '" loading="lazy">';
     if (card.imgCredit) {
       h += '<span class="card-img-credit">' + card.imgCredit + '</span>';

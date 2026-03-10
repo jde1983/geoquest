@@ -23,20 +23,32 @@ geoquest/
 ├── icon-192.png      ← App icon (home screen, manifest)
 ├── icon-512.png      ← App icon (PWA install / splash)
 ├── images/           ← CC-licensed photos and maps (Phase 6)
-│   ├── africa-physical-map.png
-│   ├── africa-location-map.png
+│   ├── africa-capitals-map.png
+│   ├── africa-oceans-map.png
+│   ├── africa-on-world-political-map.png
 │   ├── africa-orthographic.png
-│   ├── african-village.jpg
+│   ├── africa-physical-map.png
+│   ├── africa-physical-vs-political.png
+│   ├── african-village.png
 │   ├── cape-town.png
+│   ├── compass-cardinal.png
 │   ├── compass-rose-8pt.png
-│   ├── drakensberg.jpg
-│   ├── mount-kilimanjaro.jpg
-│   ├── lake-victoria.jpg
-│   ├── nile-topographic.jpg
+│   ├── congo-river.png
+│   ├── drakensberg.png
+│   ├── equator-hemispheres.png
+│   ├── lake-victoria.png
+│   ├── landlocked-countries.png
+│   ├── limpopo-river.jpg
+│   ├── mount-kilimanjaro.png
+│   ├── nile-river.png
 │   ├── orange-river.png
-│   ├── reinel-compass-rose.png
-│   ├── sahara-dunes.jpg
+│   ├── physical-vs-political.png
+│   ├── sahara-dunes.png
+│   ├── south-africa-border-countries.jpg
+│   ├── south-africa-capitals.jpg
 │   ├── south-africa-location.png
+│   ├── southern-africa-zoom.png
+│   ├── subsistence-farming.jpg
 │   ├── victoria-falls.jpg
 │   └── world-political-map.png
 └── README.md
@@ -80,9 +92,9 @@ Each unit contains content cards, a memory hook card, a tap-to-reveal glossary c
 
 ### Card photography (Phase 6)
 
-16 info cards carry a contextual photograph below the card text. Images are lazy-loaded, full card width, capped at 220px height, with a small italic credit line. 8 abstract or technique cards were intentionally left without images.
+24 info cards carry contextual photographs below the card text. Five of those cards show two images side by side. Images are lazy-loaded, full card width, capped at 220px height (160px for paired images), with a small italic credit line. 4 abstract or technique cards were intentionally left without images.
 
-All images are sourced from Wikimedia Commons under CC or public domain licences. See `geoquest-images-manifest.md` for the full download list with source filenames, licence details, and direct URLs.
+All images are sourced from Wikimedia Commons under CC or public domain licences.
 
 ### Quiz
 - Multiple choice, 4 options per question
