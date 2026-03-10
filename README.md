@@ -92,7 +92,7 @@ Each unit contains content cards, a memory hook card, a tap-to-reveal glossary c
 
 ### Card photography (Phase 6)
 
-24 info cards carry contextual photographs below the card text. Five of those cards show two images side by side. Images are lazy-loaded, full card width, capped at 220px height (160px for paired images), with a small italic credit line. 4 abstract or technique cards were intentionally left without images.
+24 info cards carry contextual photographs below the card text. Six of those cards show two images side by side. Images are lazy-loaded, full card width, capped at 220px height (160px for paired images), with a small italic credit line. 4 abstract or technique cards were intentionally left without images.
 
 All images are sourced from Wikimedia Commons under CC or public domain licences.
 
