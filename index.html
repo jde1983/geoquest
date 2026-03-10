@@ -71,7 +71,7 @@
   ============================================== */
   .screen {
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
     display: none;
     flex-direction: column;
     overflow-y: auto;
@@ -204,7 +204,7 @@
   /* Grand Quest complete overlay */
   .gq-complete {
     position: fixed;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
     z-index: 1000;
     background: var(--w1-parchment);
     display: flex;
@@ -217,7 +217,7 @@
   /* The fold curtain sweeps down then retracts to reveal parchment */
   .gq-curtain {
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
     background: #1a1208;
     transform-origin: top center;
     animation: curtainFold 0.9s cubic-bezier(0.7,0,0.3,1) forwards;
@@ -264,7 +264,7 @@
   /* Level-up overlay */
   .levelup-overlay {
     position: fixed;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
     z-index: 999;
     background: rgba(10,8,6,0.92);
     display: flex;
@@ -339,7 +339,7 @@
   .wc1::before {
     content: '';
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
     background: repeating-linear-gradient(
       180deg,
       transparent 0px, transparent 26px,
@@ -772,7 +772,7 @@
   ============================================== */
   .modal-bg {
     position: fixed;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
     background: rgba(0,0,0,0.72);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
@@ -856,7 +856,7 @@
 
   .card-surface {
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
     border-radius: 20px;
     padding: 22px 20px 22px;
     overflow-y: auto;
@@ -1091,7 +1091,7 @@
   ============================================== */
   .quiz-surface {
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
     border-radius: 20px;
     padding: 22px 20px;
     overflow-y: auto;
@@ -1208,7 +1208,7 @@
 
   .done-surface {
     position: absolute;
-    inset: 0;
+    top: 0; right: 0; bottom: 0; left: 0;
     border-radius: 20px;
     padding: 22px 20px;
     overflow-y: auto;
@@ -1475,8 +1475,6 @@ var CARDS = {
       type: 'info', emoji: '📐',
       head: 'Practice — compass directions',
       body: 'Put your finger on the first country. Move toward the second. Going up-right? That is <mark>north-east</mark>. Up-left? <mark>North-west</mark>. Down-right? <mark>South-east</mark>. Down-left? <mark>South-west</mark>. Straight up, down, left, or right = one of the four cardinal directions.'
-      img: 'images/world-political-map.png',
-      imgCredit: 'CIA political world map. US Government, public domain.'
     },
     {
       type: 'hook', emoji: '✨',
